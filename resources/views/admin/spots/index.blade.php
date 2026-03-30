@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="flex justify-between items-center mb-6">
-        <p class="text-gray-500">{{ $spots->total() }} parkeerplaatsen in totaal</p>
+        <p class="text-gray-300">{{ $spots->total() }} parkeerplaatsen in totaal</p>
         <a href="{{ route('admin.spots.create') }}" class="btn-primary">+ Toevoegen</a>
     </div>
 
@@ -12,21 +12,21 @@
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                <tr class="border-b-2 border-gray-100">
-                    <th class="pb-3 text-left text-gray-500 font-medium">Naam</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Locatie</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Type</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Tarief/uur</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Status</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Res.</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Acties</th>
+                <tr class="border-b-2 border-gray-600">
+                    <th class="pb-3 text-left text-gray-300 font-medium">Naam</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Locatie</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Type</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Tarief/uur</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Status</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Res.</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Acties</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-600">
                 @foreach($spots as $spot)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-[#2b3a5b]">
                         <td class="py-3 font-semibold">{{ $spot->name }}</td>
-                        <td class="py-3 text-gray-500">{{ $spot->location ?? '–' }}</td>
+                        <td class="py-3 text-gray-300">{{ $spot->location ?? '–' }}</td>
                         <td class="py-3">{{ $spot->type }}</td>
                         <td class="py-3">€{{ $spot->price_per_hour }}</td>
                         <td class="py-3">
@@ -38,7 +38,7 @@
                         <td class="py-3">
                             <div class="flex gap-2">
                                 <a href="{{ route('admin.spots.edit', $spot) }}"
-                                   class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded-lg font-medium">
+                                   class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-300 px-3 py-1.5 rounded-lg font-medium">
                                     Bewerken
                                 </a>
                                 <form method="POST" action="{{ route('admin.spots.destroy', $spot) }}"

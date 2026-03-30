@@ -1,13 +1,14 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\User\{DashboardController, ReservationController};
+use App\Http\Controllers\User\{DashboardController, ReservationController, ProfileController};     
 use App\Http\Controllers\Admin\{
     AdminDashboardController,
     UserManagementController,
     ParkingSpotController,
     ReservationManagementController
 };
+use App\Http\Controllers\VehicleController;
 
 // === PUBLIEKE ROUTES ===
 Route::get('/', fn() => redirect()->route('login'));
@@ -23,12 +24,21 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'banned'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profiel
+    Route::get('/profiel', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profiel', [ProfileController::class, 'update'])->name('profile.update');
+
     // Reserveringen
     Route::get('/reserveren', [ReservationController::class, 'create'])->name('reserve');
     Route::post('/reserveren/betaal', [ReservationController::class, 'betaalForm'])->name('betaal');
     Route::post('/reserveren/opslaan', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reserveringen', [ReservationController::class, 'index'])->name('reservations');
     Route::delete('/reserveringen/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+    // Voertuigen
+    Route::get('/voertuigen', [VehicleController::class, 'index'])->name('vehicles.index');
+    Route::post('/voertuigen', [VehicleController::class, 'store'])->name('vehicles.store');
+    Route::delete('/voertuigen/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
 });
 
 // === ADMIN ROUTES ===

@@ -8,11 +8,9 @@ use Illuminate\Support\Facades\Auth;
 class AdminMiddleware {
     public function handle(Request $request, Closure $next) {
         if (!Auth::check() || !Auth::user()->isAdmin()) {
-            abort(403, 'Alleen admins hebben toegang tot deze pagina.');
+            abort(403, 'Toegang geweigerd. Alleen voor beheerders.');
         }
+
         return $next($request);
     }
 }
-
-// Registreer in app/Http/Kernel.php onder $routeMiddleware:
-// 'admin' => \App\Http\Middleware\AdminMiddleware::class,

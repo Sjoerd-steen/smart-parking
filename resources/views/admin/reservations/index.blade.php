@@ -24,27 +24,27 @@
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                <tr class="border-b-2 border-gray-100">
-                    <th class="pb-3 text-left text-gray-500 font-medium">Gebruiker</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Parkeerplaats</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Datum</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Tijdslot</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Prijs</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Betaald</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Status</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Acties</th>
+                <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+                    <th class="pb-3 text-left text-muted font-medium">Gebruiker</th>
+                    <th class="pb-3 text-left text-muted font-medium">Parkeerplaats</th>
+                    <th class="pb-3 text-left text-muted font-medium">Datum</th>
+                    <th class="pb-3 text-left text-muted font-medium">Tijdslot</th>
+                    <th class="pb-3 text-left text-muted font-medium">Prijs</th>
+                    <th class="pb-3 text-left text-muted font-medium">Betaald</th>
+                    <th class="pb-3 text-left text-muted font-medium">Status</th>
+                    <th class="pb-3 text-left text-muted font-medium">Acties</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 @foreach($reservations as $res)
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover-row transition-colors">
                         <td class="py-3">
                             <p class="font-medium">{{ $res->user->name }}</p>
-                            <p class="text-gray-400 text-xs">{{ $res->user->email }}</p>
+                            <p class="text-muted text-xs">{{ $res->user->email }}</p>
                         </td>
                         <td class="py-3">{{ $res->parkingSpot->name }}</td>
                         <td class="py-3">{{ $res->datum->format('d-m-Y') }}</td>
-                        <td class="py-3 text-gray-500">{{ $res->start_tijd }} – {{ $res->eind_tijd }}</td>
+                        <td class="py-3 text-muted">{{ $res->start_tijd }} – {{ $res->eind_tijd }}</td>
                         <td class="py-3 font-semibold">€{{ number_format($res->totaal_prijs, 2) }}</td>
                         <td class="py-3">
               <span class="{{ $res->betaald ? 'badge-green' : 'badge-red' }}">
@@ -54,7 +54,7 @@
                         <td class="py-3">
                             <form method="POST" action="{{ route('admin.reservations.update', $res) }}">
                                 @csrf @method('PUT')
-                                <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded px-2 py-1.5">
+                                <select name="status" onchange="this.form.submit()" class="form-input text-xs py-1.5 px-2 !mt-0 h-auto">
                                     @foreach(['actief','geannuleerd','voltooid'] as $s)
                                         <option value="{{ $s }}" {{ $res->status === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
                                     @endforeach

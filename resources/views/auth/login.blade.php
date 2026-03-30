@@ -1,61 +1,66 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>SmartParking – Inloggen</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 flex items-center justify-center p-4">
+@extends('layouts.app')
 
-<div class="w-full max-w-md">
-    {{-- Logo --}}
-    <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4">🅿</div>
-        <h1 class="text-3xl font-bold text-white">SmartParking</h1>
-        <p class="text-blue-200 mt-1">Slim Parkeerbeheer Systeem</p>
-    </div>
+@section('title', 'Inloggen')
 
-    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-2xl">
-        <h2 class="text-xl font-bold text-white mb-6">Inloggen</h2>
+@section('content')
+<div class="flex justify-center items-center py-12">
+    <div class="card max-w-md w-full !p-8 animate-alert">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-white tracking-tight mb-2">Welkom terug</h2>
+            <p class="text-gray-300 text-sm">Log in op uw SmartParking account</p>
+        </div>
 
-        @if($errors->any())
-            <div class="bg-red-500/20 border border-red-400 text-red-200 rounded-lg p-3 mb-5 text-sm">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+        <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
             @csrf
             <div>
-                <label class="block text-blue-200 text-sm font-medium mb-1.5">E-mailadres</label>
-                <input type="email" name="email" value="{{ old('email') }}" required
-                       class="w-full bg-white/10 border border-white/30 text-white placeholder-blue-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                       placeholder="uw@email.nl">
+                <label class="form-label" for="email">E-mailadres</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                        </svg>
+                    </div>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                        class="form-input pl-10 w-full"
+                        placeholder="naam@voorbeeld.nl">
+                </div>
             </div>
+            
             <div>
-                <label class="block text-blue-200 text-sm font-medium mb-1.5">Wachtwoord</label>
-                <input type="password" name="password" required
-                       class="w-full bg-white/10 border border-white/30 text-white placeholder-blue-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                       placeholder="••••••••">
+                <label class="form-label" for="password">Wachtwoord</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <input type="password" id="password" name="password" required
+                        class="form-input pl-10 w-full"
+                        placeholder="••••••••">
+                </div>
             </div>
-            <div class="flex items-center justify-between">
-                <label class="flex items-center gap-2 text-blue-200 text-sm cursor-pointer">
-                    <input type="checkbox" name="remember" class="rounded">
-                    Onthoud mij
-                </label>
+
+            <div class="flex items-center justify-between pb-2">
+                <div class="flex items-center">
+                    <input id="remember" type="checkbox" class="h-4 w-4 text-[#3b5998] focus:ring-[#3b5998] border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-300">
+                        Onthoud mij
+                    </label>
+                </div>
+                <a href="#" class="text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200">Wachtwoord vergeten?</a>
             </div>
-            <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 rounded-lg transition-colors duration-200 mt-2">
+
+            <button type="submit" class="btn-primary w-full text-lg py-3 flex justify-center items-center gap-2 group">
                 Inloggen
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </form>
 
-        <p class="text-center text-blue-300 text-sm mt-6">
-            Geen account?
-            <a href="{{ route('register') }}" class="text-white font-semibold hover:underline">Registreer nu</a>
-        </p>
+        <div class="mt-8 text-center border-t border-gray-600 pt-6">
+            <p class="text-gray-300 text-sm">
+                Nog geen account? <a href="{{ route('register') }}" class="font-bold text-white hover:underline transition-all">Registreer nu</a>
+            </p>
+        </div>
     </div>
 </div>
-
-</body>
-</html>
+@endsection

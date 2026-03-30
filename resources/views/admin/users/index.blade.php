@@ -18,28 +18,28 @@
 
     <div class="card">
         <div class="flex items-center justify-between mb-5">
-            <h3 class="font-bold text-gray-800">Alle Gebruikers ({{ $users->total() }})</h3>
+            <h3 class="font-bold text-white">Alle Gebruikers ({{ $users->total() }})</h3>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                <tr class="border-b-2 border-gray-100">
-                    <th class="pb-3 text-left text-gray-500 font-medium">ID</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Naam</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">E-mail</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Rol</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Reserveringen</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Status</th>
-                    <th class="pb-3 text-left text-gray-500 font-medium">Acties</th>
+                <tr class="border-b-2 border-gray-600">
+                    <th class="pb-3 text-left text-gray-300 font-medium">ID</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Naam</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">E-mail</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Rol</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Reserveringen</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Status</th>
+                    <th class="pb-3 text-left text-gray-300 font-medium">Acties</th>
                 </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-600">
                 @foreach($users as $user)
-                    <tr class="hover:bg-gray-50 {{ $user->is_banned ? 'opacity-60' : '' }}">
+                    <tr class="hover:bg-[#2b3a5b] {{ $user->is_banned ? 'opacity-60' : '' }}">
                         <td class="py-3 text-gray-400">#{{ $user->id }}</td>
                         <td class="py-3 font-medium">{{ $user->name }}</td>
-                        <td class="py-3 text-gray-600">{{ $user->email }}</td>
+                        <td class="py-3 text-gray-300">{{ $user->email }}</td>
                         <td class="py-3">
               <span class="{{ $user->role === 'admin' ? 'badge-blue' : 'badge-green' }}">
                 {{ ucfirst($user->role) }}
@@ -54,12 +54,12 @@
                         <td class="py-3">
                             <div class="flex gap-2">
                                 <a href="{{ route('admin.users.edit', $user) }}"
-                                   class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1.5 rounded-lg font-medium">
+                                   class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-300 px-3 py-1.5 rounded-lg font-medium">
                                     Bewerken
                                 </a>
                                 <form method="POST" action="{{ route('admin.users.ban', $user) }}">
                                     @csrf
-                                    <button class="text-xs {{ $user->is_banned ? 'bg-green-100 hover:bg-green-200 text-green-700' : 'bg-red-100 hover:bg-red-200 text-red-700' }} px-3 py-1.5 rounded-lg font-medium">
+                                    <button class="text-xs {{ $user->is_banned ? 'bg-green-100 hover:bg-green-200 text-green-300' : 'bg-red-100 hover:bg-red-200 text-red-700' }} px-3 py-1.5 rounded-lg font-medium">
                                         {{ $user->is_banned ? 'Deblokkeer' : 'Blokkeer' }}
                                     </button>
                                 </form>

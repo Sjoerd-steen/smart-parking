@@ -4,13 +4,13 @@
 
 @section('content')
     <div class="max-w-lg mx-auto card">
-        <div class="flex items-center gap-4 mb-6 pb-5 border-b border-gray-100">
-            <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-2xl font-bold text-blue-700">
+        <div class="flex items-center gap-4 mb-6 pb-5 border-b border-gray-600">
+            <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-2xl font-bold text-blue-300">
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             </div>
             <div>
-                <h3 class="font-bold text-gray-800">{{ $user->name }}</h3>
-                <p class="text-sm text-gray-500">{{ $user->email }}</p>
+                <h3 class="font-bold text-white">{{ $user->name }}</h3>
+                <p class="text-sm text-gray-300">{{ $user->email }}</p>
             </div>
         </div>
 
