@@ -82,6 +82,12 @@
                 --row-hover: #334155;
         }
 
+
+        html.dark body {
+            background-image: none !important;
+            background-color: var(--bg-color) !important;
+        }
+
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background-image: url('/images/background.png');
@@ -91,7 +97,7 @@
             background-attachment: fixed;
             background-position: center;
             color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, background-image 0.3s;
             -webkit-font-smoothing: antialiased;
         }
 
