@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller {
 
     public function loginForm() {
+        if (Auth::check()) {
+            return Auth::user()->isAdmin() ? redirect()->route('admin.dashboard') : redirect()->route('user.dashboard');
+        }
         return view('auth.login');
     }
 
@@ -45,6 +48,9 @@ class AuthController extends Controller {
     }
 
     public function registerForm() {
+        if (Auth::check()) {
+            return Auth::user()->isAdmin() ? redirect()->route('admin.dashboard') : redirect()->route('user.dashboard');
+        }
         return view('auth.register');
     }
 

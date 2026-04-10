@@ -238,6 +238,9 @@
             background-color: var(--card-bg) !important;
         }
     </style>
+
+    <!-- Turbo for SPA-like instant navigation -->
+    <script type="module">import hotwireTurbo from "https://cdn.skypack.dev/@hotwired/turbo";</script>
 </head>
 <body class="antialiased bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-gray-100 transition-colors duration-300">
 
@@ -394,7 +397,7 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('turbo:load', () => {
             const toggleButton = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const menuOverlay = document.getElementById('menu-overlay');
@@ -493,5 +496,8 @@
             }
         });
     </script>
+
+    <!-- Instant.page for just-in-time preloading -->
+    <script src="https://instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3ZZ1hzLUAWx08GZ068ngG/ZTu8q+851n02//BdjRkIXXF9WfE2OaLq0" defer></script>
 </body>
 </html>

@@ -147,7 +147,7 @@
 
 @if(!$spotsWithStatus->isEmpty())
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('turbo:load', function () {
         // Initialize Map
         var map = L.map('map').setView([51.9225, 4.47917], 13); // Centered on Rotterdam
 
