@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">      
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SmartParking – @yield('title', 'Dashboard')</title>
+        <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'media',
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -57,8 +64,8 @@
             --row-hover: #f1f5f9;
         }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
+        html.dark {
+            /* Dark theme */
                 /* Dark theme */
                 --bg-color: #0f172a;
                 --card-bg: #1e293b;
@@ -73,14 +80,13 @@
                 --header-bg: #172554;
                 --btn-text: #ffffff;
                 --row-hover: #334155;
-            }
         }
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background-image: url('/images/background.png');
             background-color: var(--bg-color);
-            background-blend-mode: multiply;
+            background-blend-mode: normal;
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
@@ -227,11 +233,10 @@
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased bg-gray-50 text-gray-900 dark:bg-[#0a0a0a] dark:text-gray-100 transition-colors duration-300">
 
     {{-- TOP HEADER --}}
     <header class="site-header min-h-[80px] px-4 md:px-8 py-4 md:py-0 flex items-center justify-between shadow-md relative z-50">
-        {{-- Left: Logo --}}
         <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : route('user.dashboard')) : route('login') }}" class="flex items-center h-full">
             <img src="/images/logo.png" alt="SmartParking Logo" class="max-h-12 w-auto object-contain rounded-xl overflow-hidden">       
         </a>
@@ -250,6 +255,12 @@
 
         {{-- Right: Navigation (Desktop Only) --}}
         <nav class="hidden md:flex flex-row items-center gap-6">
+
+            <button id="theme-toggle" type="button" class="text-white hover:text-gray-200 focus:outline-none flex flex-col items-center group transition">
+                <svg id="theme-toggle-dark-icon" class="w-8 h-8 rounded-full border-2 border-white p-1 group-hover:bg-white/20 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon" class="w-8 h-8 rounded-full border-2 border-white p-1 group-hover:bg-white/20 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                <span class="text-xs mt-1 font-bold tracking-widest uppercase">Thema</span>
+            </button>
             @auth
                 @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="text-white hover:text-gray-200 flex flex-col items-center group transition">
@@ -293,6 +304,12 @@
         <div class="flex flex-col h-full pt-24 pb-8 px-8 overflow-y-auto">
             <ul class="flex flex-col gap-6 font-semibold text-xl tracking-wide text-[var(--text-main)]">
                 @auth
+                    <li class="menu-item block">
+                        <button id="mobile-theme-toggle" type="button" class="w-full inline-flex py-2 relative group focus:outline-none rounded-lg items-center text-left">
+                            <span id="mobile-theme-text">Thema (Light)</span>
+                            <span class="absolute left-0 bottom-1 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
+                        </button>
+                    </li>
                     @if(Auth::user()->isAdmin())
                         <li class="menu-item block">
                             <a href="{{ route('admin.dashboard') }}" class="inline-block py-2 relative group focus:outline-none rounded-lg">
@@ -414,6 +431,59 @@
                         toggleMenu();
                     }
                 });
+            }
+
+            var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+            if (themeToggleDarkIcon && themeToggleLightIcon) {
+                if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    themeToggleLightIcon.classList.remove('hidden');
+                } else {
+                    themeToggleDarkIcon.classList.remove('hidden');
+                }
+
+                            var themeToggleBtn = document.getElementById('theme-toggle');
+                var mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
+                var mobileThemeText = document.getElementById('mobile-theme-text');
+                
+                function updateMobileThemeText() {
+                    if (mobileThemeText) {
+                        mobileThemeText.textContent = document.documentElement.classList.contains('dark') ? 'Thema (Dark)' : 'Thema (Light)';
+                    }
+                }
+                
+                if (mobileThemeText) updateMobileThemeText();
+
+                themeToggleBtn.addEventListener('click', function() {
+                    themeToggleDarkIcon.classList.toggle('hidden');
+                    themeToggleLightIcon.classList.toggle('hidden');
+
+                    if (localStorage.getItem('color-theme')) {
+                        if (localStorage.getItem('color-theme') === 'light') {
+                            document.documentElement.classList.add('dark');
+                            localStorage.setItem('color-theme', 'dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.setItem('color-theme', 'light');
+                        }
+                    } else {
+                        if (document.documentElement.classList.contains('dark')) {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.setItem('color-theme', 'light');
+                        } else {
+                            document.documentElement.classList.add('dark');
+                            localStorage.setItem('color-theme', 'dark');
+                        }
+                    }
+                    if (typeof updateMobileThemeText === 'function') updateMobileThemeText();
+                });
+                
+                if (mobileThemeToggleBtn) {
+                    mobileThemeToggleBtn.addEventListener('click', function() {
+                        themeToggleBtn.click();
+                    });
+                }
             }
         });
     </script>
