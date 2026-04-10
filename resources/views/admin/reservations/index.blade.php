@@ -13,9 +13,9 @@
                 <option value="geannuleerd" {{ request('status') === 'geannuleerd' ? 'selected' : '' }}>Geannuleerd</option>
                 <option value="voltooid" {{ request('status') === 'voltooid' ? 'selected' : '' }}>Voltooid</option>
             </select>
-            <button type="submit" class="btn-primary">🔍 Filteren</button>
+            <button type="submit" class="btn btn-primary">🔍 Filteren</button>
             @if(request()->hasAny(['search','status']))
-                <a href="{{ route('admin.reservations.index') }}" class="btn-secondary">✕ Reset</a>
+                <a href="{{ route('admin.reservations.index') }}" class="btn btn-secondary">✕ Reset</a>
             @endif
         </form>
     </div>
@@ -24,7 +24,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+                <tr class="border-b-2 border-brand-border dark:border-gray-700">
                     <th class="pb-3 text-left text-muted font-medium">Gebruiker</th>
                     <th class="pb-3 text-left text-muted font-medium">Parkeerplaats</th>
                     <th class="pb-3 text-left text-muted font-medium">Datum</th>
@@ -42,7 +42,7 @@
                             <p class="font-medium">{{ $res->user->name }}</p>
                             <p class="text-muted text-xs">{{ $res->user->email }}</p>
                         </td>
-                        <td class="py-3">{{ $res->parkingSpot->name }}</td>
+                        <td class="py-3">{{ $res->spot_details["name"] ?? "Onbekend" }}</td>
                         <td class="py-3">{{ $res->datum->format('d-m-Y') }}</td>
                         <td class="py-3 text-muted">{{ $res->start_tijd }} – {{ $res->eind_tijd }}</td>
                         <td class="py-3 font-semibold">€{{ number_format($res->totaal_prijs, 2) }}</td>

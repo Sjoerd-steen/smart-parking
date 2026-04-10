@@ -8,7 +8,7 @@ return new class extends Migration {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parking_spot_id')->constrained()->onDelete('cascade');
+            $table->string('external_parking_id');
             $table->date('datum');
             $table->time('start_tijd');
             $table->time('eind_tijd');

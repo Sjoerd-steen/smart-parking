@@ -3,8 +3,8 @@
 
 @section('content')
 <div class="flex items-center justify-between mb-6">
-    <h2 class="text-3xl font-bold text-white">🚗 Mijn Voertuigen</h2>
-    <a href="{{ route('user.dashboard') }}" class="text-white hover:underline">&larr; Terug naar Dashboard</a>
+    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Mijn Voertuigen</h2>
+    <a href="{{ route('user.dashboard') }}" class="text-gray-900 dark:text-white hover:underline">&larr; Terug naar Dashboard</a>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -15,7 +15,7 @@
             @csrf
             <div>
                 <label class="form-label">Type Voertuig</label>
-                <select name="type" class="form-input" required>
+                <select name="type" class="form-input bg-form-bg text-form-text border-form-border focus:ring-2 focus:ring-primary rounded-lg cursor-pointer h-12" required>
                     <option value="auto">Auto</option>
                     <option value="bus">Bus / Bestelwagen</option>
                     <option value="motor">Motor</option>
@@ -26,7 +26,7 @@
                 <label class="form-label">Kenteken</label>
                 <input type="text" name="license_plate" class="form-input uppercase" required placeholder="XX-123-Y">
             </div>
-            <button type="submit" class="btn-primary w-full mt-2">➕ Opslaan</button>
+            <button type="submit" class="btn btn-primary w-full mt-2">Opslaan</button>
         </form>
     </div>
 
@@ -34,13 +34,13 @@
     <div class="card">
         <h3 class="text-xl font-bold mb-4">Mijn Geregistreerde Voertuigen</h3>
         @if($vehicles->isEmpty())
-            <p class="text-gray-300 italic">Je hebt nog geen voertuigen toegevoegd.</p>
+            <p class="text-gray-600 dark:text-gray-300 italic">Je hebt nog geen voertuigen toegevoegd.</p>
         @else
             <ul class="divide-y divide-gray-600">
                 @foreach($vehicles as $vehicle)
                     <li class="py-4 flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <div class="bg-gray-700 p-3 rounded-xl border border-gray-600 shadow-inner">
+                            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded-xl border border-gray-300 dark:border-gray-600 shadow-inner">
                                 @if(strtolower($vehicle->type) == 'auto')
                                     <span class="text-2xl" title="Auto">🚗</span>
                                 @elseif(strtolower($vehicle->type) == 'motor')
@@ -55,13 +55,13 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-yellow-400 bg-yellow-900 px-3 py-1 rounded border border-yellow-600 inline-block mt-1 tracking-widest">{{ $vehicle->license_plate }}</h4>
-                                <p class="text-sm text-gray-300 mt-1 capitalize">{{ $vehicle->type }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 capitalize">{{ $vehicle->type }}</p>
                             </div>
                         </div>
                         <form method="POST" action="{{ route('user.vehicles.destroy', $vehicle) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('Voertuig verwijderen?')" class="text-red-400 hover:text-red-300 text-sm font-semibold">❌ Verwijderen</button>
+                            <button type="submit" onclick="return confirm('Voertuig verwijderen?')" class="text-red-400 hover:text-red-300 text-sm font-semibold">Verwijderen</button>
                         </form>
                     </li>
                 @endforeach

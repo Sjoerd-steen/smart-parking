@@ -1,186 +1,16 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SmartParking – @yield('title', 'Dashboard')</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'media',
-            theme: {
-                extend: {
-                    colors: {
-                        parking: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
-                        },
-                        brand: {
-                            dark: '#0f172a',
-                            card: '#1e293b',
-                            border: '#334155',
-                            muted: '#64748b'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* Light theme */
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --form-bg: #f1f5f9;
-            --form-border: #cbd5e1;
-            --form-text: #0f172a;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --header-bg: #1e3a8a;
-            --btn-text: #ffffff;
-            --row-hover: #f1f5f9;
-        }
+import re
+with open('resources/views/layouts/app.blade.php', 'r') as f:
+    content = f.read()
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                /* Dark theme */
-                --bg-color: #0f172a;
-                --card-bg: #1e293b;
-                --card-border: #334155;
-                --text-main: #f8fafc;
-                --text-muted: #94a3b8;
-                --form-bg: #0f172a;
-                --form-border: #475569;
-                --form-text: #f8fafc;
-                --primary: #3b82f6;
-                --primary-hover: #2563eb;
-                --header-bg: #172554;
-                --btn-text: #ffffff;
-                --row-hover: #334155;
-            }
-        }
+# Replace CSS
+css_old = r"""        /\* Mobile menu transition \*/
+        @media \(max-width: 767px\) \{
+            #main-nav \{ transition: max-height 0\.3s ease-out, opacity 0\.3s ease-out; overflow: hidden; \}
+            #main-nav\.default-hidden \{ max-height: 0; opacity: 0; pointer-events: none; \}
+            #main-nav\.menu-open \{ max-height: 500px; opacity: 1; pointer-events: auto; \}
+        \}"""
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-image: url('/images/background.png');
-            background-color: var(--bg-color);
-            background-blend-mode: multiply;
-            background-size: cover;
-            background-attachment: fixed;
-            background-position: center;
-            color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .main-content { min-height: calc(100vh - 80px); }
-        
-        /* Unified Card Styling */
-        .card { 
-            background-color: var(--card-bg); 
-            border: 1px solid var(--card-border);
-            border-radius: 1rem; 
-            padding: 2rem; 
-            color: var(--text-main); 
-            width: 100%; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
-            transition: transform 0.2s ease, box-shadow 0.2s ease; 
-        }    
-        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        
-        /* Form Elements */
-        .form-input { 
-            width: 100%; 
-            background-color: var(--form-bg); 
-            color: var(--form-text); 
-            border: 1px solid var(--form-border); 
-            border-radius: 0.75rem !important; 
-            padding: 0.75rem 1rem; 
-            margin-top: 0.5rem; 
-            outline: none; 
-            transition: all 0.2s ease; 
-            font-size: 0.95rem;
-        }
-        
-        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        
-        select.form-input {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-            cursor: pointer;
-        }
-        
-        /* Dark mode svg for select dropdowns */
-        @media (prefers-color-scheme: dark) {
-            select.form-input {
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            }
-        }
-
-        .form-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        
-        /* Button Styles */
-        .btn {
-            font-weight: 600; 
-            padding: 0.75rem 1.5rem; 
-            border-radius: 0.75rem !important; 
-            text-align: center; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            border: none; 
-            transition: all 0.2s ease;
-            letter-spacing: 0.025em;
-        }
-        .btn-primary { background-color: var(--primary); color: var(--btn-text); }      
-        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-                .btn-primary:active { transform: translateY(0); box-shadow: none; }
-        .btn-secondary { background-color: transparent; border: 1px solid var(--form-border); color: var(--text-main); }
-        .btn-secondary:hover { background-color: #eff6ff; border-color: var(--primary); color: var(--primary); }
-        .btn-secondary:active { background-color: #dbeafe; }
-        .btn-danger { background-color: #ef4444; color: white; }
-        .btn-danger:hover { background-color: #dc2626; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-        .btn-danger:active { transform: translateY(0); box-shadow: none; }
-        .btn:disabled, .btn[disabled] { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; pointer-events: none; }
-        
-        /* Badges */
-        .badge { padding: 0.25rem 0.75rem; border-radius: 9999px !important; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid transparent; }
-        .badge-green { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; border-color: rgba(59, 130, 246, 0.3); }
-        .badge-red { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-        .badge-amber { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
-        .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
-        
-        .hover-row:hover { background-color: var(--row-hover); }
-        .text-muted { color: var(--text-muted); }
-
-        .site-header { background-color: var(--header-bg); border-bottom: 1px solid var(--card-border); transition: all 0.3s ease; }
-        .nav-mobile { background-color: var(--header-bg); }
-        @media (min-width: 768px) {
-            .nav-mobile { background-color: transparent !important; }
-        }
-
-        /* Mobile menu transition */
+css_new = """        /* Mobile menu transition */
         @media (max-width: 767px) {
             .nav-mobile { display: none !important; }
         }
@@ -205,35 +35,20 @@
         .menu-item:nth-child(2) { transition-delay: 0.15s; }
         .menu-item:nth-child(3) { transition-delay: 0.20s; }
         .menu-item:nth-child(4) { transition-delay: 0.25s; }
-        .menu-item:nth-child(5) { transition-delay: 0.30s; }
-        
-        /* Alert animations */
-        @keyframes slideInDown {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .animate-alert { animation: slideInDown 0.3s ease-out forwards; }
+        .menu-item:nth-child(5) { transition-delay: 0.30s; }"""
 
-        /* Leaflet popup customization */
-        .leaflet-popup-content-wrapper {
-            background-color: var(--card-bg) !important;
-            color: var(--text-main) !important;
-            border-radius: 0.75rem !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-            border: 1px solid var(--card-border);
-        }
-        .leaflet-popup-tip {
-            background-color: var(--card-bg) !important;
-        }
-    </style>
-</head>
-<body class="antialiased">
+content = re.sub(css_old, css_new, content)
 
-    {{-- TOP HEADER --}}
+
+# Replace Header Structure
+header_old = r"""    \{\{-- TOP HEADER --\}\}
+    <header class="site-header.*?</header>"""
+
+header_new = """    {{-- TOP HEADER --}}
     <header class="site-header min-h-[80px] px-4 md:px-8 py-4 md:py-0 flex items-center justify-between shadow-md relative z-50">
         {{-- Left: Logo --}}
-        <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : route('user.dashboard')) : route('login') }}" class="flex items-center h-full">
-            <img src="/images/logo.png" alt="SmartParking Logo" class="max-h-12 w-auto object-contain rounded-xl overflow-hidden">       
+        <a href="/" class="flex items-center h-full">
+            <img src="/images/Screenshot%202026-03-06%20at%2010.43.38%E2%80%AFAM%204.png" alt="SmartParking Logo" class="max-h-12 w-auto object-contain">       
         </a>
 
         {{-- Hamburger Button (Mobile) --}}
@@ -337,40 +152,17 @@
                 @endauth
             </ul>
         </div>
-    </nav>
+    </nav>"""
 
-    {{-- MAIN CONTENT --}}
-    <main class="main-content flex flex-col items-center w-full px-4 py-8 relative">     
-        <div class="w-full max-w-6xl mx-auto">
-            @if(session('success'))
-                <div class="bg-emerald-600/90 backdrop-blur-sm border border-emerald-500 text-gray-900 dark:text-white px-6 py-4 rounded-lg shadow-lg relative mb-6 animate-alert flex items-start gap-3">
-                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <div>
-                        <p class="font-semibold">Succes</p>
-                        <p class="text-sm opacity-90">{{ session('success') }}</p>
-                    </div>
-                </div>
-            @endif
+content = re.sub(header_old, header_new, content, flags=re.DOTALL)
 
-            @if($errors->any())
-                <div class="bg-red-600/90 backdrop-blur-sm border border-red-500 text-gray-900 dark:text-white px-6 py-4 rounded-lg shadow-lg relative mb-6 animate-alert flex items-start gap-3">
-                    <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <div>
-                        <p class="font-semibold">Er ging iets mis</p>
-                        <ul class="list-disc list-inside text-sm opacity-90 mt-1">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            @endif
+# Replace Javascript 
+script_old = r"""    <script>
+        document\.addEventListener\('DOMContentLoaded', \(\) => \{
+            const menuBtn = document\.getElementById\('mobile-menu-btn'\);.*?\}\);
+    </script>"""
 
-            @yield('content')
-        </div>
-    </main>
-
-    <script>
+script_new = """    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const toggleButton = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -416,6 +208,9 @@
                 });
             }
         });
-    </script>
-</body>
-</html>
+    </script>"""
+
+content = re.sub(script_old, script_new, content, flags=re.DOTALL)
+
+with open('resources/views/layouts/app.blade.php', 'w') as f:
+    f.write(content)

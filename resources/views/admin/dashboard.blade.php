@@ -3,6 +3,10 @@
 @section('page-title', 'Admin Dashboard')
 
 @section('content')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <div class="mb-6 flex justify-between items-end">
         <div>
             <h1 class="text-3xl font-bold mb-2">Beheerderspaneel</h1>
@@ -35,18 +39,14 @@
     <div class="grid lg:grid-cols-3 gap-6 mb-8">
         {{-- Quick Links --}}
         <div class="card">
-            <h3 class="font-bold mb-4 border-b border-gray-200 dark:border-white/20 pb-2">Snel Navigeren</h3>
+            <h3 class="font-bold mb-4 border-b border-brand-border dark:border-white/20 pb-2">Snel Navigeren</h3>
             <div class="space-y-3">
-                <a href="{{ route('admin.spots.create') }}" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors font-medium text-sm group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    Parkeerplaats toevoegen
-                </a>
                 <a href="{{ route('admin.reservations.index') }}" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors font-medium text-sm group">
                     <svg class="w-5 h-5 group-hover:scale-110 transition-transform text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     Reserveringen beheren
                 </a>
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg transition-colors font-medium text-sm group">
-                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform text-blue-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     Gebruikers beheren
                 </a>
             </div>
@@ -54,15 +54,15 @@
 
         {{-- Bezettingsgraad --}}
         <div class="card">
-            <h3 class="font-bold mb-4 border-b border-gray-200 dark:border-white/20 pb-2">Bezettingsgraad</h3>
+            <h3 class="font-bold mb-4 border-b border-brand-border dark:border-white/20 pb-2">Bezettingsgraad</h3>
             <div class="text-center py-6">
-                <div class="text-6xl font-black {{ $bezettingsgraad > 80 ? 'text-red-500' : ($bezettingsgraad > 50 ? 'text-yellow-500' : 'text-green-500') }} drop-shadow-md">
+                <div class="text-6xl font-black {{ $bezettingsgraad > 80 ? 'text-red-500' : ($bezettingsgraad > 50 ? 'text-yellow-500' : 'text-blue-500') }} drop-shadow-md">
                     {{ $bezettingsgraad }}%
                 </div>
                 <p class="text-muted text-sm mt-3 font-medium uppercase tracking-widest">van alle plaatsen bezet</p>
             </div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
-                <div class="h-full rounded-full {{ $bezettingsgraad > 80 ? 'bg-red-500' : ($bezettingsgraad > 50 ? 'bg-yellow-400' : 'bg-green-600') }}"
+            <div class="h-4 bg-gray-200 dark:bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
+                <div class="h-full rounded-full {{ $bezettingsgraad > 80 ? 'bg-red-500' : ($bezettingsgraad > 50 ? 'bg-yellow-400' : 'bg-blue-600') }}"
                      style="width:{{ $bezettingsgraad }}%"></div>
             </div>
             <div class="flex justify-between text-xs text-muted mt-2">
@@ -76,11 +76,11 @@
             <h3 class="font-bold mb-4">🔴 Live Overzicht</h3>
             <div class="space-y-3">
                 <div class="flex justify-between items-center p-3 bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-transparent rounded-lg">
-                    <span class="text-sm text-green-800 dark:text-gray-300">Beschikbaar</span>
+                    <span class="text-sm text-green-800 dark:text-gray-600 dark:text-gray-300">Beschikbaar</span>
                     <span class="font-bold text-green-700 dark:text-green-300">{{ $beschikbaar }}</span>
                 </div>
                 <div class="flex justify-between items-center p-3 bg-blue-100 dark:bg-blue-900/40 border border-blue-200 dark:border-transparent rounded-lg">
-                    <span class="text-sm text-blue-800 dark:text-gray-300">Actieve res.</span>
+                    <span class="text-sm text-blue-800 dark:text-gray-600 dark:text-gray-300">Actieve res.</span>
                     <span class="font-bold text-blue-700 dark:text-blue-300">{{ $actief }}</span>
                 </div>
             </div>
@@ -96,7 +96,7 @@
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
                 <thead>
-                <tr class="border-b border-gray-200 dark:border-gray-600">
+                <tr class="border-b border-brand-border dark:border-gray-300 dark:border-gray-600">
                     <th class="pb-3 text-left text-muted font-medium">Gebruiker</th>
                     <th class="pb-3 text-left text-muted font-medium">Parkeerplaats</th>
                     <th class="pb-3 text-left text-muted font-medium">Datum</th>
@@ -108,7 +108,7 @@
                 @foreach($recentReservations as $res)
                     <tr class="hover-row transition-colors">
                         <td class="py-3">{{ $res->user->name }}</td>
-                        <td class="py-3">{{ $res->parkingSpot->name }}</td>
+                        <td class="py-3">{{ $res->spot_details["name"] ?? "Onbekend" }}</td>
                         <td class="py-3 text-muted">{{ $res->datum->format('d-m-Y') }}</td>
                         <td class="py-3 font-semibold">€{{ number_format($res->totaal_prijs, 2) }}</td>
                         <td class="py-3">

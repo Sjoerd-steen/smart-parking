@@ -5,7 +5,6 @@ use App\Http\Controllers\User\{DashboardController, ReservationController, Profi
 use App\Http\Controllers\Admin\{
     AdminDashboardController,
     UserManagementController,
-    ParkingSpotController,
     ReservationManagementController
 };
 use App\Http\Controllers\VehicleController;
@@ -52,15 +51,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/gebruikers/{user}/ban', [UserManagementController::class, 'ban'])->name('users.ban');
     Route::delete('/gebruikers/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 
-    // Parkeerplaatsen
-    Route::resource('parkeerplaatsen', ParkingSpotController::class)->names([
-        'index'   => 'spots.index',
-        'create'  => 'spots.create',
-        'store'   => 'spots.store',
-        'edit'    => 'spots.edit',
-        'update'  => 'spots.update',
-        'destroy' => 'spots.destroy',
-    ]);
 
     // Reserveringen
     Route::get('/reserveringen', [ReservationManagementController::class, 'index'])->name('reservations.index');
