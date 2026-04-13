@@ -12,71 +12,66 @@ class ParkingApiService
      */
     public function getRotterdamParkingSpots()
     {
-        // 1. Check if we have a fresh 1-hour cache
-        $spots = Cache::get('rotterdam_parking_spots_fresh');
-        if ($spots) {
-            return collect($spots);
-        }
+        $spotsArray = Cache::remember('rotterdam_parking_spots_fresh', 3600, function () {
+            // 2. Fetch from API
+            $query = '[out:json];
+            area["name"="Rotterdam"]["admin_level"="8"]->.searchArea;
+            (
+              node["amenity"="parking"](area.searchArea);
+              way["amenity"="parking"](area.searchArea);
+            );
+            out center 50;';
 
-        // 2. Fetch from API
-        $query = '[out:json];
-        area["name"="Rotterdam"]["admin_level"="8"]->.searchArea;
-        (
-          node["amenity"="parking"](area.searchArea);
-          way["amenity"="parking"](area.searchArea);
-        );
-        out center 50;';
+            $spots = [];
 
-        $apiSuccess = false;
-        $spots = [];
+            try {
+                $response = Http::timeout(5)->get('https://overpass-api.de/api/interpreter', [
+                    'data' => $query
+                ]);
 
-        try {
-            $response = Http::timeout(5)->get('https://overpass-api.de/api/interpreter', [
-                'data' => $query
-            ]);
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['elements'])) {
+                        foreach($data['elements'] as $el) {
+                            $lat = $el['lat'] ?? $el['center']['lat'] ?? null;
+                            $lon = $el['lon'] ?? $el['center']['lon'] ?? null;
+                            if (!$lat || !$lon) continue;
 
-            if ($response->successful()) {
-                $data = $response->json();
-                if (isset($data['elements'])) {
-                    foreach($data['elements'] as $el) {
-                        $lat = $el['lat'] ?? $el['center']['lat'] ?? null;
-                        $lon = $el['lon'] ?? $el['center']['lon'] ?? null;
-                        if (!$lat || !$lon) continue;
-
-                        $spots[] = [
-                            'id' => (string) $el['id'],
-                            'name' => $el['tags']['name'] ?? 'Parking ' . $el['id'],
-                            'lat' => $lat,
-                            'lng' => $lon,
-                            'city' => 'Rotterdam',
-                            'capacity' => $el['tags']['capacity'] ?? rand(20, 200),
-                            'price_per_hour' => 2.00, // Default mock price
-                        ];
-                    }
-                    if (count($spots) > 0) {
-                        $apiSuccess = true;
+                            $spots[] = [
+                                'id' => (string) $el['id'],
+                                'name' => $el['tags']['name'] ?? 'Parking ' . $el['id'],
+                                'lat' => $lat,
+                                'lng' => $lon,
+                                'city' => 'Rotterdam',
+                                'capacity' => $el['tags']['capacity'] ?? rand(20, 200),
+                                'price_per_hour' => 2.00, // Default mock price
+                            ];
+                        }
                     }
                 }
+            } catch (\Exception $e) {
+                // Ignore the exception
             }
-        } catch (\Exception $e) {
-            $apiSuccess = false;
-        }
 
-        // 3. If API was successful, cache it both short-term (1hr) and long-term (30 days backup)
-        if ($apiSuccess) {
-            Cache::put('rotterdam_parking_spots_fresh', $spots, 3600);
-            Cache::put('rotterdam_parking_spots_backup', $spots, now()->addDays(30));
-            return collect($spots);
-        }
+            if (count($spots) > 0) {
+                // Cache the backup in case future requests fail after this cache expires
+                Cache::put('rotterdam_parking_spots_backup', $spots, now()->addDays(30));
+                return $spots;
+            }
 
-        // 4. If API failed, check for the long-term 30-day backup cache
-        $backupSpots = Cache::get('rotterdam_parking_spots_backup');
-        if ($backupSpots) {
-            return collect($backupSpots);
-        }
+            // 4. If API failed, check for the long-term 30-day backup cache
+            $backupSpots = Cache::get('rotterdam_parking_spots_backup');
+            if ($backupSpots) {
+                // If the cached backup is a collection, convert it to an array
+                return is_array($backupSpots) ? $backupSpots : (method_exists($backupSpots, 'toArray') ? $backupSpots->toArray() : (array)$backupSpots);
+            }
 
-        // 5. If there is absolutely no backup cache (first ever run & API is down), use the local mock fallback
-        return collect(self::getFallbackSpots());
+            // 5. If there is absolutely no backup cache (first ever run & API is down), use the local mock fallback
+            return self::getFallbackSpots();
+        });
+
+        // Ensure we always return a collection, even if it was cached as an array or object
+        return collect(is_object($spotsArray) && method_exists($spotsArray, 'toArray') ? $spotsArray->toArray() : $spotsArray);
     }
 
         private static function getFallbackSpots()

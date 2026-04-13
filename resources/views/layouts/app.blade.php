@@ -397,7 +397,13 @@
     </main>
 
     <script>
-        document.addEventListener('turbo:load', () => {
+        function initApp() {
+            // Prevent multiple initializations on the same DOM when turbo isn't replacing it
+            if (document.body.dataset.appInitialized === 'true') {
+                return;
+            }
+            document.body.dataset.appInitialized = 'true';
+
             const toggleButton = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const menuOverlay = document.getElementById('menu-overlay');
@@ -448,11 +454,13 @@
             if (themeToggleDarkIcon && themeToggleLightIcon) {
                 if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     themeToggleLightIcon.classList.remove('hidden');
+                    themeToggleDarkIcon.classList.add('hidden');
                 } else {
                     themeToggleDarkIcon.classList.remove('hidden');
+                    themeToggleLightIcon.classList.add('hidden');
                 }
 
-                            var themeToggleBtn = document.getElementById('theme-toggle');
+                var themeToggleBtn = document.getElementById('theme-toggle');
                 var mobileThemeToggleBtn = document.getElementById('mobile-theme-toggle');
                 var mobileThemeText = document.getElementById('mobile-theme-text');
                 
@@ -464,37 +472,48 @@
                 
                 if (mobileThemeText) updateMobileThemeText();
 
-                themeToggleBtn.addEventListener('click', function() {
-                    themeToggleDarkIcon.classList.toggle('hidden');
-                    themeToggleLightIcon.classList.toggle('hidden');
+                if (themeToggleBtn) {
+                    themeToggleBtn.addEventListener('click', function() {
+                        themeToggleDarkIcon.classList.toggle('hidden');
+                        themeToggleLightIcon.classList.toggle('hidden');
 
-                    if (localStorage.getItem('color-theme')) {
-                        if (localStorage.getItem('color-theme') === 'light') {
-                            document.documentElement.classList.add('dark');
-                            localStorage.setItem('color-theme', 'dark');
+                        if (localStorage.getItem('color-theme')) {
+                            if (localStorage.getItem('color-theme') === 'light') {
+                                document.documentElement.classList.add('dark');
+                                localStorage.setItem('color-theme', 'dark');
+                            } else {
+                                document.documentElement.classList.remove('dark');
+                                localStorage.setItem('color-theme', 'light');
+                            }
                         } else {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.setItem('color-theme', 'light');
+                            if (document.documentElement.classList.contains('dark')) {
+                                document.documentElement.classList.remove('dark');
+                                localStorage.setItem('color-theme', 'light');
+                            } else {
+                                document.documentElement.classList.add('dark');
+                                localStorage.setItem('color-theme', 'dark');
+                            }
                         }
-                    } else {
-                        if (document.documentElement.classList.contains('dark')) {
-                            document.documentElement.classList.remove('dark');
-                            localStorage.setItem('color-theme', 'light');
-                        } else {
-                            document.documentElement.classList.add('dark');
-                            localStorage.setItem('color-theme', 'dark');
-                        }
-                    }
-                    if (typeof updateMobileThemeText === 'function') updateMobileThemeText();
-                });
-                
-                if (mobileThemeToggleBtn) {
-                    mobileThemeToggleBtn.addEventListener('click', function() {
-                        themeToggleBtn.click();
+                        if (typeof updateMobileThemeText === 'function') updateMobileThemeText();
                     });
+
+                    if (mobileThemeToggleBtn) {
+                        mobileThemeToggleBtn.addEventListener('click', function() {
+                            themeToggleBtn.click();
+                        });
+                    }
                 }
             }
-        });
+        }
+
+        // Initialize on both standard load and Turbo load to ensure it runs
+        document.addEventListener('DOMContentLoaded', initApp);
+        document.addEventListener('turbo:load', initApp);
+        
+        // Also run immediately in case DOMContentLoaded already fired (e.g. async module)
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            initApp();
+        }
     </script>
 
     <!-- Instant.page for just-in-time preloading -->
