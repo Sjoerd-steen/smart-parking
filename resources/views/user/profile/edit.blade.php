@@ -33,7 +33,7 @@
                 <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
             <div class="relative flex justify-center">
-                <span class="px-3 bg-[#3b4b6b] text-lg font-bold text-gray-600 dark:text-gray-300">Wachtwoord Wijzigen (Optioneel)</span>
+                <span class="px-3 bg-[var(--card-bg)] text-lg font-bold text-gray-600 dark:text-gray-300">Wachtwoord Wijzigen (Optioneel)</span>
             </div>
         </div>
         

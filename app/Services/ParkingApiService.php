@@ -12,7 +12,7 @@ class ParkingApiService
      */
     public function getRotterdamParkingSpots()
     {
-        $spotsArray = Cache::remember('rotterdam_parking_spots_fresh', 3600, function () {
+        $spotsArray = Cache::rememberForever('rotterdam_parking_spots_fresh', function () {
             // 2. Fetch from API
             $query = '[out:json];
             area["name"="Rotterdam"]["admin_level"="8"]->.searchArea;
