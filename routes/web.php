@@ -36,6 +36,7 @@ Route::middleware(['auth', 'banned'])->prefix('user')->name('user.')->group(func
 
     // Reserveringen
     Route::get('/reserveren', [ReservationController::class, 'create'])->name('reserve');
+    Route::get('/reserveren/status', [ReservationController::class, 'apiStatus'])->name('reserve.status');
     Route::post('/reserveren/betaal', [ReservationController::class, 'betaalForm'])->name('betaal');
     Route::post('/reserveren/opslaan', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reserveringen', [ReservationController::class, 'index'])->name('reservations');
