@@ -13,18 +13,18 @@ class AdminReservationTest extends TestCase
 
     public function test_admin_reservation_integration_goed_scenario()
     {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $response = $this->actingAs($admin)->put('/admin/reservations/1', [
+        $admin = User::factory()->create(['role' => 'admin']);
+        $response = $this->actingAs($admin)->put('/admin/reserveringen/1', [
             'status' => 'voltooid'
         ]);
-        // Simulate real behavior
-        $response->assertStatus(404); // Fails since reservation 1 does not exist yet
+ 
+        $response->assertStatus(404);
     }
 
     public function test_admin_reservation_integration_fout_scenario()
     {
-        $admin = User::factory()->create(['is_admin' => true]);
-        $response = $this->actingAs($admin)->delete('/admin/reservations/999');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $response = $this->actingAs($admin)->delete('/admin/reserveringen/999');
         $response->assertStatus(404);
     }
 }

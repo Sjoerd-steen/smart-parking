@@ -14,7 +14,7 @@ class VehicleTest extends TestCase
     public function test_vehicle_integration_goed_scenario()
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->post('/user/vehicles', [
+        $response = $this->actingAs($user)->post('/user/voertuigen', [
             'license_plate' => 'AB-123-C',
             'type' => 'Auto'
         ]);
@@ -24,7 +24,7 @@ class VehicleTest extends TestCase
     public function test_vehicle_integration_fout_scenario()
     {
         $user = User::factory()->create();
-        $response = $this->actingAs($user)->post('/user/vehicles', []);
+        $response = $this->actingAs($user)->post('/user/voertuigen', []);
         $response->assertSessionHasErrors(['license_plate']);
     }
 }
