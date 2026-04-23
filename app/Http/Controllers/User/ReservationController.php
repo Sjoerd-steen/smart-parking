@@ -15,7 +15,6 @@ class ReservationController extends Controller {
         $this->parkingService = $parkingService;
     }
 
-    // Overzicht van beschikbare parkeerplaatsen om te reserveren (Map view)
     public function create(Request $request) {
         $spots = $this->parkingService->getRotterdamParkingSpots();
         
@@ -33,7 +32,6 @@ class ReservationController extends Controller {
         return view('user.reserve', compact('spotsWithStatus', 'selectedSpotId', 'vehicles'));
     }
 
-    // Betaalpagina tonen
     public function betaalForm(Request $request) {
         $request->validate([
             'external_parking_id' => 'required',
@@ -60,7 +58,6 @@ class ReservationController extends Controller {
         ]);
     }
 
-    // Reservering opslaan na betaling
     public function store(Request $request) {
         $request->validate([
             'external_parking_id' => 'required',
@@ -109,7 +106,6 @@ class ReservationController extends Controller {
             ->with('success', "Reservering bevestigd! Parkeerplaats {$spot['name']} gereserveerd voor €{$prijs}.");
     }
 
-    // Overzicht eigen reserveringen
     public function index() {
         $reservations = Reservation::where('user_id', Auth::id())
             ->latest()
@@ -124,7 +120,6 @@ class ReservationController extends Controller {
         return view('user.reservations', compact('reservations'));
     }
 
-    // Reservering annuleren
     public function destroy(Reservation $reservation) {
         if ($reservation->user_id !== Auth::id()) {
             abort(403, 'Geen toegang.');

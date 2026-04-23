@@ -8,7 +8,6 @@
     </h2>
 
     <div class="grid md:grid-cols-2 gap-8">
-        {{-- OVERZICHT --}}
         <div class="card relative overflow-hidden h-fit">
             <div class="absolute -top-16 -right-16 w-32 h-32 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
             
@@ -50,7 +49,6 @@
             </div>
         </div>
 
-        {{-- BETAALFORMULIER --}}
         <div class="card">
             <h3 class="font-bold text-gray-900 dark:text-white mb-6 uppercase tracking-wider text-lg border-b border-gray-300 dark:border-gray-600 pb-2">💳 Betaalmethode</h3>
 
@@ -87,7 +85,7 @@
 
                 <div class="bg-gray-200 dark:bg-gray-800 rounded-xl p-4 mb-6 border border-gray-700 shadow-inner">
                     <p class="font-bold text-gray-600 dark:text-gray-300 mb-2 uppercase tracking-wide text-xs">Klantovereenkomst</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">By accepting this user agreement, you hereby grant us eternal custody of your soul, all minor inconveniences, and your undying loyalty. Resistance is futile. If accepted we will grant you the access to our website</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">Door deze overeenkomst te accepteren, gaat u akkoord met de algemene voorwaarden voor het reserveren van de parkeerplek.</p>
                 </div>
 
                 <label class="flex items-start gap-3 mb-6 cursor-pointer p-2 hover:bg-gray-200 dark:bg-gray-800/50 rounded-lg transition-colors">

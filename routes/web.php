@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\{
 };
 use App\Http\Controllers\VehicleController;
 
-// === PUBLIEKE ROUTES ===
 Route::get('/', function () {
     if (auth()->check()) {
         return auth()->user()->isAdmin() ? redirect()->route('admin.dashboard') : redirect()->route('user.dashboard');
