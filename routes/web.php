@@ -14,7 +14,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return auth()->user()->isAdmin() ? redirect()->route('admin.dashboard') : redirect()->route('user.dashboard');
     }
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // Auth
