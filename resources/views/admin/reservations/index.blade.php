@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Reserveringen Beheren')
-@section('page-title', 'Reserveringen Beheren')
+@section('title', 'Reservations')
+@section('page-title', 'Reservations')
 
 @section('content')
 <style>
