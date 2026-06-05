@@ -182,11 +182,7 @@
         .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 48px rgba(26,86,219,.38); }
         .btn-cta:hover::after { background: rgba(255,255,255,.08); }
 
-        /* ─── HERO
-           .hero-inner (text) = z-index 10, sits ON TOP
-           .hero-img-wrap (screenshot) = z-index 1, layered BEHIND the text
-           The image bleeds up behind the copy so text appears to float over it.
-        ─── */
+        /* ─── HERO ─── */
         .hero {
             position: relative;
             text-align: center;
@@ -194,7 +190,7 @@
             overflow: hidden;
         }
 
-        /* Dot grid — lowest layer */
+        /* Dot grid */
         .hero::before {
             content: ''; position: absolute;
             inset: 0;
@@ -204,56 +200,71 @@
             pointer-events: none; z-index: 0;
         }
 
-        /* Text block — highest layer, floats above the image */
+        /*
+         * hero-inner wraps BOTH the text content AND the background image.
+         * The image sits absolutely behind the text via z-index layering.
+         */
         .hero-inner {
             position: relative;
             z-index: 10;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding-bottom: 5rem;
+            padding-bottom: 0;
             animation: heroIn .75s var(--ease-spring) .05s both;
         }
 
         @keyframes heroIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
 
-        /* ─── HERO IMAGE — layered behind the text ───
-           negative margin-top pulls the image up so its top edge
-           slides under the bottom of .hero-inner.
-           z-index:1 keeps it behind the text (z-index:10).
-        ─── */
-        .hero-img-wrap {
-            position: relative;
-            z-index: 1;
-            width: calc(100% - 3.5rem);
-            max-width: 1140px;
-            margin: -6rem auto 0;
-            padding-bottom: 3rem;
-            animation: heroIn 1s var(--ease-spring) .46s both;
+        /* ─── HERO BG IMAGE — lives INSIDE hero-inner, sits behind text ─── */
+        .hero-bg-img {
+            position: absolute;
+            /* stretch to cover the full hero-inner area */
+            inset: 0;
+            z-index: 0;           /* behind all text children (z-index: 1+) */
+            pointer-events: none;
+            border-radius: var(--r-xl);
+            overflow: hidden;
         }
 
-        /* Soft fade at the top of the image so the text blends into it */
-        .hero-img-wrap::before {
+        .hero-bg-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
+
+        /* Multi-layer overlay: heavy at top (covers text area), fades to transparent at bottom so image shows through below buttons */
+        .hero-bg-img::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 50%;
-            background: linear-gradient(to bottom, var(--surface) 0%, rgba(244,246,251,.6) 40%, transparent 100%);
-            z-index: 2;
-            pointer-events: none;
-            border-radius: 22px 22px 0 0;
+            inset: 0;
+            /* Strong fade from the page bg colour → semi-transparent → clear.
+               Top ~55% (badge + h1 + sub + buttons) stays very readable.
+               Bottom ~45% the image comes through naturally. */
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(244,246,251, 0.97)  0%,
+                    rgba(244,246,251, 0.92) 20%,
+                    rgba(244,246,251, 0.78) 40%,
+                    rgba(244,246,251, 0.52) 58%,
+                    rgba(244,246,251, 0.18) 72%,
+                    rgba(244,246,251, 0.00) 100%
+                );
         }
 
-        .hero-img-wrap img {
-            display: block; width: 100%;
-            aspect-ratio: 16 / 7;
-            object-fit: cover; object-position: center top;
-            border-radius: 22px;
-            box-shadow:
-                0 0 0 1px rgba(30,40,66,.07),
-                0 4px 12px rgba(10,15,30,.06),
-                0 16px 40px rgba(10,15,30,.10),
-                0 48px 100px rgba(10,15,30,.15),
-                0 80px 160px rgba(10,15,30,.10);
+        /* All direct text/button children sit on top of the bg image */
+        .hero-inner > *:not(.hero-bg-img) {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Padding so the content has room above/below and the image has height */
+        .hero-content-wrap {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 2rem 3.5rem;
         }
 
         .hero-badge {
@@ -337,6 +348,42 @@
         .proof-av:first-child { margin-left: 0; }
         .proof-text { font-size: .85rem; color: var(--ink-3); }
         .proof-text strong { color: var(--ink); font-weight: 700; }
+
+        /* ─── HERO SCREENSHOT — visible BELOW the text, below hero-inner ─── */
+        .hero-img-wrap {
+            position: relative;
+            z-index: 1;
+            width: calc(100% - 3.5rem);
+            max-width: 1140px;
+            margin: -3rem auto 0;
+            padding-bottom: 3rem;
+            animation: heroIn 1s var(--ease-spring) .46s both;
+        }
+
+        /* Fade the top of the exposed screenshot so it blends with the content above */
+        .hero-img-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 45%;
+            background: linear-gradient(to bottom, var(--surface) 0%, rgba(244,246,251,.5) 50%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 22px 22px 0 0;
+        }
+
+        .hero-img-wrap img {
+            display: block; width: 100%;
+            aspect-ratio: 16 / 7;
+            object-fit: cover; object-position: center top;
+            border-radius: 22px;
+            box-shadow:
+                0 0 0 1px rgba(30,40,66,.07),
+                0 4px 12px rgba(10,15,30,.06),
+                0 16px 40px rgba(10,15,30,.10),
+                0 48px 100px rgba(10,15,30,.15),
+                0 80px 160px rgba(10,15,30,.10);
+        }
 
         /* ─── TRUST BAR ─── */
         .trust {
@@ -779,61 +826,75 @@
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     HERO  —  single-column editorial layout
-     Order: badge → h1 → sub → buttons → social proof → image
+     HERO
+     The hero-inner now contains:
+       1. hero-bg-img  — the photo, absolutely positioned BEHIND text (z:0)
+       2. hero-content-wrap — badge + h1 + sub + buttons + proof (z:1)
+     Below hero-inner, hero-img-wrap shows the same image fully exposed.
      ═══════════════════════════════════════════════════════════ -->
 <section class="hero">
-    <!-- Copy block -->
+    <!-- Copy block + background image layered inside -->
     <div class="hero-inner">
-        <div class="hero-badge">
-            <span class="badge-dot"></span>
-            <span data-lang-nl="Slimme parkeeroplossing" data-lang-en="Smart parking solution">Slimme parkeeroplossing</span>
+
+        <!-- ① Background image — sits BEHIND all text children -->
+        <div class="hero-bg-img" aria-hidden="true">
+            <img src="{{ asset('images/hero.jpg') }}" alt="" loading="eager">
         </div>
 
-        <h1 class="hero-h1">
-            <span data-lang-nl="Parkeren, maar dan" data-lang-en="Parking, but">Parkeren, maar dan</span><br>
-            <em class="gradient-text" data-lang-nl="echt slim." data-lang-en="actually smart.">echt slim.</em>
-        </h1>
+        <!-- ② Text content — sits ON TOP of the bg image -->
+        <div class="hero-content-wrap">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span data-lang-nl="Slimme parkeeroplossing" data-lang-en="Smart parking solution">Slimme parkeeroplossing</span>
+            </div>
 
-        <p class="hero-sub" data-lang-nl="Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal." data-lang-en="Find and reserve your parking spot in seconds. Real-time availability, secure payment — anywhere, anytime.">Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal.</p>
+            <h1 class="hero-h1">
+                <span data-lang-nl="Parkeren, maar dan" data-lang-en="Parking, but">Parkeren, maar dan</span><br>
+                <em class="gradient-text" data-lang-nl="echt slim." data-lang-en="actually smart.">echt slim.</em>
+            </h1>
 
-        <div class="hero-buttons">
-            @auth
-                @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="btn-hero-primary" data-lang-nl="Admin Dashboard →" data-lang-en="Admin Dashboard →">Admin Dashboard →</a>
+            <p class="hero-sub" data-lang-nl="Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal." data-lang-en="Find and reserve your parking spot in seconds. Real-time availability, secure payment — anywhere, anytime.">Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal.</p>
+
+            <div class="hero-buttons">
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="btn-hero-primary" data-lang-nl="Admin Dashboard →" data-lang-en="Admin Dashboard →">Admin Dashboard →</a>
+                    @else
+                        <a href="{{ route('user.reserve') }}" class="btn-hero-primary">
+                            <span data-lang-nl="Parkeerplaats vinden" data-lang-en="Find parking">Parkeerplaats vinden</span>
+                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        </a>
+                        <a href="{{ route('user.dashboard') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
+                    @endif
                 @else
-                    <a href="{{ route('user.reserve') }}" class="btn-hero-primary">
-                        <span data-lang-nl="Parkeerplaats vinden" data-lang-en="Find parking">Parkeerplaats vinden</span>
+                    <a href="{{ route('login') }}" class="btn-hero-primary">
+                        <span data-lang-nl="Gratis starten" data-lang-en="Get started free">Gratis starten</span>
                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </a>
-                    <a href="{{ route('user.dashboard') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
-                @endif
-            @else
-                <a href="{{ route('login') }}" class="btn-hero-primary">
-                    <span data-lang-nl="Gratis starten" data-lang-en="Get started free">Gratis starten</span>
-                    <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-                </a>
-                <a href="{{ route('login') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
-            @endauth
-        </div>
-
-        <div class="hero-proof">
-            <div class="proof-avatars">
-                <div class="proof-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">A</div>
-                <div class="proof-av" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
-                <div class="proof-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">S</div>
-                <div class="proof-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">M</div>
+                    <a href="{{ route('login') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
+                @endauth
             </div>
-            <div class="proof-text">
-                <span data-lang-nl="Al <strong>50.000+</strong> gebruikers parkeren slimmer" data-lang-en="Already <strong>50,000+</strong> users park smarter">Al <strong>50.000+</strong> gebruikers parkeren slimmer</span>
-            </div>
-        </div>
-    </div><!-- /hero-inner -->
 
-    <!-- ▼ Hero image — same section, directly below social proof ▼ -->
-    <div class="hero-img-wrap">
-        <img src="{{ asset('images/hero.jpg') }}" alt="SmartParking — vind snel een parkeerplaats" loading="lazy">
+            <div class="hero-proof">
+                <div class="proof-avatars">
+                    <div class="proof-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">A</div>
+                    <div class="proof-av" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
+                    <div class="proof-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">S</div>
+                    <div class="proof-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">M</div>
+                </div>
+                <div class="proof-text">
+                    <span data-lang-nl="Al <strong>50.000+</strong> gebruikers parkeren slimmer" data-lang-en="Already <strong>50,000+</strong> users park smarter">Al <strong>50.000+</strong> gebruikers parkeren slimmer</span>
+                </div>
+            </div>
+        </div><!-- /hero-content-wrap -->
+
     </div>
+    
+    <br>
+    <br><!-- /hero-inner -->
+
+    <!-- ▼ Hero image exposed below the text block ▼ -->
+
 
 </section><!-- /hero -->
 
