@@ -6,941 +6,762 @@
     <title>SmartParking — De toekomst van parkeren</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Cabinet+Grotesk:wght@400;500;600;700;800&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        /* ─────────────────────────────────────────────
-           DESIGN TOKENS
-        ───────────────────────────────────────────── */
+        /* ─── TOKENS ─── */
         :root {
-            --primary:        #2563eb;
-            --primary-dark:   #1d4ed8;
-            --primary-light:  #3b82f6;
-            --accent:         #06b6d4;
-            --accent-dark:    #0891b2;
-            --ink:            #0f172a;
-            --ink-mid:        #334155;
-            --ink-soft:       #64748b;
-            --ink-faint:      #94a3b8;
-            --surface:        #f8fafc;
-            --surface-2:      #f1f5f9;
-            --white:          #ffffff;
-            --border:         #e2e8f0;
-            --border-soft:    rgba(226,232,240,0.6);
-            --grad-brand:     linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
-            --grad-hero:      linear-gradient(160deg, #f0f7ff 0%, #fafcff 40%, #f0fdff 70%, #f5f3ff 100%);
-            --shadow-sm:      0 2px 8px rgba(15,23,42,.06);
-            --shadow-md:      0 8px 28px rgba(15,23,42,.09);
-            --shadow-lg:      0 20px 60px rgba(15,23,42,.12);
-            --shadow-brand:   0 8px 32px rgba(37,99,235,.28);
-            --r-sm:  10px;
-            --r-md:  16px;
-            --r-lg:  24px;
-            --r-xl:  32px;
+            --ink:           #0a0f1e;
+            --ink-2:         #1e2842;
+            --ink-3:         #3d4f70;
+            --ink-4:         #7b8eb5;
+            --ink-5:         #b0bdd6;
+
+            --surface:       #f4f6fb;
+            --surface-2:     #edf0f9;
+            --white:         #ffffff;
+            --border:        rgba(30,40,66,.10);
+            --border-2:      rgba(30,40,66,.06);
+
+            --blue:          #1a56db;
+            --blue-2:        #1e40af;
+            --blue-light:    #3b82f6;
+            --cyan:          #06b6d4;
+            --cyan-2:        #0891b2;
+            --indigo:        #4338ca;
+
+            --grad:          linear-gradient(135deg, #1a56db 0%, #06b6d4 100%);
+            --grad-soft:     linear-gradient(135deg, rgba(26,86,219,.08) 0%, rgba(6,182,212,.06) 100%);
+            --grad-hero-bg:  radial-gradient(ellipse 100% 80% at 50% -20%, rgba(26,86,219,.09) 0%, transparent 60%),
+                             radial-gradient(ellipse 60% 50% at 90% 30%, rgba(6,182,212,.07) 0%, transparent 55%),
+                             radial-gradient(ellipse 50% 60% at 10% 70%, rgba(67,56,202,.05) 0%, transparent 55%),
+                             #f4f6fb;
+
+            --sh-sm:   0 2px 8px rgba(10,15,30,.07);
+            --sh-md:   0 8px 32px rgba(10,15,30,.10);
+            --sh-lg:   0 24px 64px rgba(10,15,30,.14);
+            --sh-xl:   0 40px 100px rgba(10,15,30,.16);
+            --sh-blue: 0 8px 40px rgba(26,86,219,.30);
+
+            --r-sm:  8px;
+            --r-md:  14px;
+            --r-lg:  20px;
+            --r-xl:  28px;
+            --r-2xl: 40px;
+
+            --font-display: 'Cabinet Grotesk', sans-serif;
+            --font-serif:   'Instrument Serif', serif;
+            --font-body:    'Satoshi', sans-serif;
+
+            --ease-spring: cubic-bezier(.22,1,.36,1);
         }
 
-        /* ─────────────────────────────────────────────
-           RESET & BASE
-        ───────────────────────────────────────────── */
+        /* ─── RESET ─── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; font-size: 16px; }
-
+        html { scroll-behavior: smooth; }
         body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--white);
+            font-family: var(--font-body);
+            background: var(--surface);
             color: var(--ink);
             overflow-x: hidden;
-            line-height: 1.65;
             -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
-
-        h1, h2, h3, h4 {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            line-height: 1.1;
-        }
-
         a { text-decoration: none; }
+        img { display: block; max-width: 100%; }
 
-        /* ─────────────────────────────────────────────
-           UTILITY
-        ───────────────────────────────────────────── */
-        .container {
-            width: 100%;
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        /* ─── PAGE BG ─── */
+        body { background: var(--grad-hero-bg); }
+
+        /* Grain */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
         }
+
+        /* ─── UTILITY ─── */
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.75rem; }
 
         .gradient-text {
-            background: var(--grad-brand);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        /* ─────────────────────────────────────────────
-           REVEAL ANIMATIONS
-        ───────────────────────────────────────────── */
+        /* ─── REVEAL ─── */
         .reveal {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1);
+            opacity: 0; transform: translateY(24px);
+            transition: opacity .6s var(--ease-spring), transform .6s var(--ease-spring);
         }
         .reveal.visible { opacity: 1; transform: none; }
-        .delay-1 { transition-delay: .08s; }
-        .delay-2 { transition-delay: .16s; }
-        .delay-3 { transition-delay: .24s; }
-        .delay-4 { transition-delay: .32s; }
-        .delay-5 { transition-delay: .40s; }
+        .d1 { transition-delay: .06s; }
+        .d2 { transition-delay: .12s; }
+        .d3 { transition-delay: .18s; }
+        .d4 { transition-delay: .24s; }
+        .d5 { transition-delay: .30s; }
 
-        /* ─────────────────────────────────────────────
-           NAVBAR
-        ───────────────────────────────────────────── */
-        .navbar {
-            position: fixed;
-            inset: 0 0 auto;
-            z-index: 200;
-            padding: .9rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: background .3s, box-shadow .3s, backdrop-filter .3s;
+        /* ─── NAVBAR ─── */
+        .nav {
+            position: fixed; inset: 0 0 auto; z-index: 200;
+            padding: .875rem 1.75rem;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: background .25s, box-shadow .25s, backdrop-filter .25s;
+        }
+        .nav.scrolled {
+            background: rgba(244,246,251,.85);
+            backdrop-filter: blur(20px) saturate(1.8);
+            box-shadow: 0 1px 0 var(--border), var(--sh-sm);
         }
 
-        .navbar.scrolled {
-            background: rgba(255,255,255,.88);
-            backdrop-filter: blur(24px) saturate(1.6);
-            box-shadow: 0 1px 0 var(--border), var(--shadow-sm);
+        .nav-logo {
+            font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+            color: var(--ink); letter-spacing: -.02em;
+            display: flex; align-items: center; gap: .5rem;
         }
-
-        .navbar-brand {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--ink);
-            letter-spacing: -0.02em;
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-        }
-        .navbar-brand .brand-icon {
-            width: 34px; height: 34px;
-            background: var(--grad-brand);
-            border-radius: 9px;
+        .nav-logo-mark {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: var(--grad);
             display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 10px rgba(26,86,219,.35);
         }
-        .navbar-brand .brand-icon svg { color: white; }
-        .navbar-brand span { color: var(--primary); }
+        .nav-logo-mark svg { color: #fff; }
+        .nav-logo .accent { color: var(--blue); }
 
-        .navbar-center {
-            display: flex;
-            align-items: center;
-            gap: 2.2rem;
+        .nav-links {
+            display: flex; gap: 2rem;
         }
-        @media (max-width: 768px) { .navbar-center { display: none; } }
+        @media (max-width: 768px) { .nav-links { display: none; } }
 
         .nav-link {
-            font-size: .875rem;
-            font-weight: 500;
-            color: var(--ink-mid);
-            transition: color .2s;
+            font-size: .875rem; font-weight: 500;
+            color: var(--ink-3);
+            transition: color .18s;
         }
-        .nav-link:hover { color: var(--primary); }
+        .nav-link:hover { color: var(--ink); }
 
-        .navbar-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .nav-actions { display: flex; align-items: center; gap: .75rem; }
 
-        .lang-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            padding: .45rem .9rem;
-            background: transparent;
-            border: 1.5px solid var(--border);
-            border-radius: var(--r-sm);
-            font-size: .8rem;
-            font-weight: 600;
-            color: var(--ink-mid);
-            cursor: pointer;
-            transition: all .2s;
+        .btn-lang {
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .4rem .85rem;
+            font-family: var(--font-body); font-size: .8rem; font-weight: 600;
+            color: var(--ink-3); background: transparent;
+            border: 1.5px solid var(--border); border-radius: var(--r-sm);
+            cursor: pointer; transition: all .18s;
         }
-        .lang-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(37,99,235,.05);
-        }
+        .btn-lang:hover { border-color: var(--blue); color: var(--blue); background: rgba(26,86,219,.05); }
+        .btn-lang svg { width: 11px; height: 11px; }
 
         .btn-ghost {
-            font-size: .875rem;
-            font-weight: 600;
-            padding: .5rem 1.1rem;
-            background: transparent;
-            color: var(--ink-mid);
-            border: 1.5px solid var(--border);
-            border-radius: var(--r-sm);
-            cursor: pointer;
-            transition: all .2s;
             display: inline-flex; align-items: center;
+            padding: .48rem 1.1rem;
+            font-family: var(--font-body); font-size: .875rem; font-weight: 600;
+            color: var(--ink-3); background: transparent;
+            border: 1.5px solid var(--border); border-radius: var(--r-sm);
+            cursor: pointer; transition: all .2s;
         }
-        .btn-ghost:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        .btn-ghost:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
 
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .6rem;
-            padding: .6rem 1.4rem;
-            background: var(--grad-brand);
-            color: white;
-            font-weight: 700;
-            font-size: .875rem;
-            border-radius: var(--r-sm);
-            border: none;
-            cursor: pointer;
-            transition: all .28s cubic-bezier(.22,1,.36,1);
-            box-shadow: var(--shadow-brand);
-            position: relative;
-            overflow: hidden;
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .55rem 1.3rem;
+            font-family: var(--font-body); font-size: .875rem; font-weight: 700;
+            color: #fff; background: var(--grad);
+            border: none; border-radius: var(--r-sm);
+            cursor: pointer; transition: all .25s var(--ease-spring);
+            box-shadow: var(--sh-blue);
+            position: relative; overflow: hidden;
         }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0);
-            transition: background .2s;
+        .btn-cta::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(255,255,255,0); transition: background .2s;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(37,99,235,.38);
-        }
-        .btn-primary:hover::after { background: rgba(255,255,255,.08); }
+        .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 48px rgba(26,86,219,.38); }
+        .btn-cta:hover::after { background: rgba(255,255,255,.08); }
 
-        .btn-primary-lg {
-            padding: .9rem 2.1rem;
-            font-size: 1rem;
-            border-radius: var(--r-md);
-        }
-
-        .btn-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .6rem;
-            padding: .9rem 2.1rem;
-            background: white;
-            color: var(--ink-mid);
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: var(--r-md);
-            border: 1.5px solid var(--border);
-            cursor: pointer;
-            transition: all .28s cubic-bezier(.22,1,.36,1);
-        }
-        .btn-secondary:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(37,99,235,.04);
-            transform: translateY(-2px);
-        }
-
-        /* ─────────────────────────────────────────────
-           PAGE BACKGROUND
-           Soft grain + mesh gradient — premium, clean
-        ───────────────────────────────────────────── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            background:
-                radial-gradient(ellipse 80% 50% at 20% 10%, rgba(37,99,235,.07) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 5%, rgba(6,182,212,.06) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 60% at 50% 90%, rgba(139,92,246,.05) 0%, transparent 60%),
-                #f8fafc;
-            pointer-events: none;
-        }
-        /* Subtle noise grain overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            opacity: .022;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            pointer-events: none;
-        }
-
-        /* ─────────────────────────────────────────────
-           HERO — Full-width premium SaaS style
-        ───────────────────────────────────────────── */
+        /* ─── HERO
+           .hero-inner (text) = z-index 10, sits ON TOP
+           .hero-img-wrap (screenshot) = z-index 1, layered BEHIND the text
+           The image bleeds up behind the copy so text appears to float over it.
+        ─── */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 130px 2rem 80px;
             position: relative;
-            overflow: hidden;
             text-align: center;
+            padding: 140px 1.75rem 0;
+            overflow: hidden;
         }
 
-        /* Ambient orbs in hero */
-        .hero-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            pointer-events: none;
-            will-change: transform;
-        }
-        .hero-orb-1 {
-            width: 680px; height: 680px;
-            background: radial-gradient(circle, rgba(37,99,235,.13) 0%, transparent 65%);
-            top: -180px; left: -140px;
-            animation: orbFloat1 10s ease-in-out infinite;
-        }
-        .hero-orb-2 {
-            width: 520px; height: 520px;
-            background: radial-gradient(circle, rgba(6,182,212,.10) 0%, transparent 65%);
-            bottom: 60px; right: -100px;
-            animation: orbFloat2 12s ease-in-out infinite;
-        }
-        .hero-orb-3 {
-            width: 340px; height: 340px;
-            background: radial-gradient(circle, rgba(139,92,246,.09) 0%, transparent 65%);
-            top: 35%; left: 55%;
-            animation: orbFloat3 14s ease-in-out infinite;
-        }
-        @keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(35px,45px)} }
-        @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,-25px)} }
-        @keyframes orbFloat3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(25px,18px)} 66%{transform:translate(-18px,-12px)} }
-
-        /* Dot grid texture on hero */
+        /* Dot grid — lowest layer */
         .hero::before {
-            content: '';
-            position: absolute;
+            content: ''; position: absolute;
             inset: 0;
-            background-image: radial-gradient(rgba(37,99,235,.09) 1px, transparent 1px);
-            background-size: 36px 36px;
-            mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 30%, transparent 100%);
-            pointer-events: none;
+            background-image: radial-gradient(rgba(26,86,219,.08) 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 20%, transparent 100%);
+            pointer-events: none; z-index: 0;
         }
 
-        /* Hero content wrapper */
-        .hero-content-wrap {
+        /* Text block — highest layer, floats above the image */
+        .hero-inner {
             position: relative;
             z-index: 10;
-            max-width: 860px;
+            max-width: 800px;
             margin: 0 auto;
-            animation: fadeSlideUp .7s ease .1s both;
+            padding-bottom: 5rem;
+            animation: heroIn .75s var(--ease-spring) .05s both;
+        }
+
+        @keyframes heroIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+
+        /* ─── HERO IMAGE — layered behind the text ───
+           negative margin-top pulls the image up so its top edge
+           slides under the bottom of .hero-inner.
+           z-index:1 keeps it behind the text (z-index:10).
+        ─── */
+        .hero-img-wrap {
+            position: relative;
+            z-index: 1;
+            width: calc(100% - 3.5rem);
+            max-width: 1140px;
+            margin: -6rem auto 0;
+            padding-bottom: 3rem;
+            animation: heroIn 1s var(--ease-spring) .46s both;
+        }
+
+        /* Soft fade at the top of the image so the text blends into it */
+        .hero-img-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, var(--surface) 0%, rgba(244,246,251,.6) 40%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+            border-radius: 22px 22px 0 0;
+        }
+
+        .hero-img-wrap img {
+            display: block; width: 100%;
+            aspect-ratio: 16 / 7;
+            object-fit: cover; object-position: center top;
+            border-radius: 22px;
+            box-shadow:
+                0 0 0 1px rgba(30,40,66,.07),
+                0 4px 12px rgba(10,15,30,.06),
+                0 16px 40px rgba(10,15,30,.10),
+                0 48px 100px rgba(10,15,30,.15),
+                0 80px 160px rgba(10,15,30,.10);
         }
 
         .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            padding: .4rem 1rem;
-            background: rgba(37,99,235,.08);
-            border: 1px solid rgba(37,99,235,.2);
-            border-radius: 100px;
-            font-size: .8rem;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            margin-bottom: 1.6rem;
+            display: inline-flex; align-items: center; gap: .45rem;
+            padding: .38rem .9rem;
+            font-family: var(--font-body); font-size: .72rem; font-weight: 700;
+            letter-spacing: .06em; text-transform: uppercase;
+            color: var(--blue);
+            background: rgba(26,86,219,.08); border: 1px solid rgba(26,86,219,.18);
+            border-radius: 100px; margin-bottom: 1.5rem;
         }
-        .hero-badge-dot {
-            width: 6px; height: 6px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: blink 2s ease-in-out infinite;
+        .badge-dot {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--blue);
+            animation: blink 2.2s ease-in-out infinite;
         }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 
         .hero-h1 {
-            font-size: clamp(2.8rem, 5.5vw, 5rem);
-            color: var(--ink);
-            margin-bottom: 1.4rem;
-            animation: fadeSlideUp .7s ease .18s both;
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 6vw, 5.25rem);
+            font-weight: 800; letter-spacing: -.03em; line-height: 1.05;
+            color: var(--ink); margin-bottom: 1.4rem;
+            animation: heroIn .75s var(--ease-spring) .14s both;
+        }
+
+        .hero-h1 em {
+            font-family: var(--font-serif);
+            font-style: italic; font-weight: 400;
         }
 
         .hero-sub {
-            font-size: 1.2rem;
-            color: var(--ink-soft);
-            font-weight: 300;
-            line-height: 1.75;
-            max-width: 580px;
-            margin: 0 auto 2.4rem;
-            animation: fadeSlideUp .7s ease .26s both;
+            font-size: 1.15rem; color: var(--ink-3); font-weight: 400; line-height: 1.75;
+            max-width: 520px; margin: 0 auto 2.25rem;
+            animation: heroIn .75s var(--ease-spring) .22s both;
         }
 
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            animation: fadeSlideUp .7s ease .34s both;
+        .hero-buttons {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+            animation: heroIn .75s var(--ease-spring) .30s both;
         }
-        @media (max-width: 480px) { .hero-cta { flex-direction: column; align-items: center; } }
 
-        .hero-social-proof {
-            margin-top: 2.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.25rem;
-            animation: fadeSlideUp .7s ease .42s both;
+        .btn-hero-primary {
+            display: inline-flex; align-items: center; gap: .6rem;
+            padding: 1rem 2.2rem;
+            font-family: var(--font-body); font-size: 1rem; font-weight: 700;
+            color: #fff; background: var(--grad);
+            border: none; border-radius: var(--r-md);
+            cursor: pointer; transition: all .28s var(--ease-spring);
+            box-shadow: var(--sh-blue);
+            position: relative; overflow: hidden;
         }
-        .hero-avatars { display: flex; }
-        .hero-avatar {
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            border: 2.5px solid white;
-            background: var(--grad-brand);
+        .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 18px 52px rgba(26,86,219,.40); }
+
+        .btn-hero-secondary {
+            display: inline-flex; align-items: center; gap: .6rem;
+            padding: 1rem 2.2rem;
+            font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+            color: var(--ink-2); background: var(--white);
+            border: 1.5px solid var(--border); border-radius: var(--r-md);
+            cursor: pointer; transition: all .28s var(--ease-spring);
+            box-shadow: var(--sh-sm);
+        }
+        .btn-hero-secondary:hover {
+            border-color: var(--blue); color: var(--blue);
+            background: rgba(26,86,219,.04); transform: translateY(-3px);
+        }
+
+        .hero-proof {
+            display: flex; align-items: center; justify-content: center; gap: 1.1rem;
+            margin-top: 2.5rem;
+            animation: heroIn .75s var(--ease-spring) .38s both;
+        }
+        .proof-avatars { display: flex; }
+        .proof-av {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2.5px solid var(--surface);
             display: flex; align-items: center; justify-content: center;
-            font-size: .7rem; font-weight: 800; color: white;
-            margin-left: -8px; flex-shrink: 0;
+            font-family: var(--font-display); font-size: .68rem; font-weight: 800; color: #fff;
+            margin-left: -7px; flex-shrink: 0;
         }
-        .hero-avatar:first-child { margin-left: 0; }
-        .hero-sp-text { font-size: .85rem; color: var(--ink-mid); }
-        .hero-sp-text strong { color: var(--ink); }
+        .proof-av:first-child { margin-left: 0; }
+        .proof-text { font-size: .85rem; color: var(--ink-3); }
+        .proof-text strong { color: var(--ink); font-weight: 700; }
 
-        /* ── Hero image / mockup panel ── */
-        .hero-visual-wrap {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 1060px;
-            margin: 4rem auto 0;
-            animation: fadeSlideUp .9s ease .5s both;
+        /* ─── TRUST BAR ─── */
+        .trust {
+            background: var(--white);
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            padding: 3rem 1.75rem;
         }
+        .trust-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+        }
+        @media (max-width: 768px) { .trust-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 400px) { .trust-grid { grid-template-columns: 1fr; } }
 
-        /* Glow behind the panel */
-        .hero-visual-wrap::before {
-            content: '';
-            position: absolute;
-            inset: -30px;
-            background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37,99,235,.12), transparent 70%);
-            border-radius: var(--r-xl);
-            pointer-events: none;
-            filter: blur(20px);
-        }
-
-        .hero-panel {
-            background: rgba(255,255,255,.7);
-            backdrop-filter: blur(24px) saturate(1.4);
-            border: 1px solid rgba(255,255,255,.9);
-            border-radius: var(--r-xl);
-            box-shadow:
-                0 0 0 1px rgba(226,232,240,.6),
-                0 4px 6px rgba(15,23,42,.04),
-                0 24px 80px rgba(15,23,42,.1),
-                0 60px 120px rgba(37,99,235,.08);
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Top bar inside panel */
-        .panel-topbar {
-            display: flex;
-            align-items: center;
-            gap: .6rem;
-            padding: .85rem 1.4rem;
-            border-bottom: 1px solid rgba(226,232,240,.7);
-            background: rgba(248,250,252,.8);
-        }
-        .panel-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .panel-dot.r { background: #fc5f5a; }
-        .panel-dot.y { background: #fdbc40; }
-        .panel-dot.g { background: #34c749; }
-        .panel-url-bar {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: .5rem;
-        }
-        .panel-url-pill {
-            background: rgba(226,232,240,.6);
-            border: 1px solid rgba(226,232,240,.8);
-            border-radius: 6px;
-            padding: .25rem 1rem;
-            font-size: .72rem;
-            font-weight: 600;
-            color: var(--ink-soft);
-            letter-spacing: .02em;
-        }
-
-        /* ── Placeholder image area — replace src with your image ── */
-        .hero-image-placeholder {
-            display: block;
-            width: 100%;
-            /* Landscape 16:9-ish aspect ratio */
-            aspect-ratio: 16 / 7;
-            object-fit: cover;
-            object-position: center top;
-            background: linear-gradient(135deg, #eff6ff 0%, #f0fdff 40%, #faf5ff 80%, #f0fdf4 100%);
-            position: relative;
-        }
-
-        /* Placeholder graphic when no real image exists */
-        .hero-image-placeholder .placeholder-inner {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-        .placeholder-icon {
-            width: 64px; height: 64px;
-            background: rgba(37,99,235,.1);
-            border-radius: var(--r-md);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .placeholder-icon svg { color: var(--primary); }
-        .placeholder-label {
-            font-size: .875rem;
-            font-weight: 600;
-            color: var(--ink-soft);
-        }
-        .placeholder-sub {
-            font-size: .75rem;
-            color: var(--ink-faint);
-        }
-
-        /* If you supply a real image, use this class on an <img> tag */
-        .hero-real-image {
-            display: block;
-            width: 100%;
-            aspect-ratio: 16 / 7;
-            object-fit: cover;
-            object-position: center top;
-            loading: lazy;
-        }
-
-        /* Bottom shimmer strip */
-        .panel-shimmer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to top, rgba(255,255,255,.9), transparent);
-            pointer-events: none;
-        }
-
-        @keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
-
-        /* ─────────────────────────────────────────────
-           TRUST BAR
-        ───────────────────────────────────────────── */
-        .trust-bar {
-            padding: 3.5rem 2rem;
-            background: white;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .trust-inner {
-            max-width: 1240px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            flex-wrap: wrap;
-        }
         .trust-item {
-            display: flex; flex-direction: column; align-items: center;
-            padding: 1.2rem 3.5rem;
+            display: flex; flex-direction: column; align-items: center; gap: .3rem;
+            padding: 1rem 2rem;
             border-right: 1px solid var(--border);
         }
         .trust-item:last-child { border-right: none; }
-        @media (max-width: 640px) {
-            .trust-item { border-right: none; border-bottom: 1px solid var(--border); width: 50%; }
+        @media (max-width: 768px) {
+            .trust-item:nth-child(2) { border-right: none; }
+            .trust-item { border-bottom: 1px solid var(--border); }
+            .trust-item:last-child { border-bottom: none; }
         }
         .trust-num {
-            font-family: 'Syne', sans-serif; font-size: 2.1rem; font-weight: 800;
-            background: var(--grad-brand);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-            line-height: 1;
+            font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+            letter-spacing: -.03em; line-height: 1;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .trust-label { font-size: .8rem; font-weight: 500; color: var(--ink-soft); margin-top: .4rem; text-align: center; }
+        .trust-label { font-size: .78rem; font-weight: 500; color: var(--ink-4); text-align: center; }
 
-        /* ─────────────────────────────────────────────
-           SECTION WRAPPER
-        ───────────────────────────────────────────── */
-        .section { padding: 7rem 2rem; }
-        .section-alt { background: white; }
+        /* ─── SECTION WRAPPER ─── */
+        .section { padding: 6.5rem 1.75rem; }
+        .section-white { background: var(--white); }
         .section-surface { background: var(--surface); }
-        .section-dark { background: var(--ink); color: white; }
 
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-label {
-            display: inline-block; font-size: .72rem; font-weight: 700;
-            letter-spacing: .1em; text-transform: uppercase; color: var(--primary);
-            background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.18);
-            border-radius: 100px; padding: .3rem .85rem; margin-bottom: 1rem;
+        .section-head { text-align: center; margin-bottom: 3.5rem; }
+        .section-eyebrow {
+            display: inline-block;
+            font-family: var(--font-body); font-size: .7rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--blue);
+            background: rgba(26,86,219,.08); border: 1px solid rgba(26,86,219,.16);
+            border-radius: 100px; padding: .28rem .85rem; margin-bottom: .9rem;
         }
-        .section-title { font-size: clamp(2rem, 4vw, 3rem); color: var(--ink); margin-bottom: 1rem; }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.85rem);
+            font-weight: 800; letter-spacing: -.025em; line-height: 1.1;
+            color: var(--ink); margin-bottom: .85rem;
+        }
         .section-sub {
-            font-size: 1.05rem; color: var(--ink-soft); font-weight: 300;
-            line-height: 1.7; max-width: 560px; margin: 0 auto;
+            font-size: 1.05rem; color: var(--ink-3); font-weight: 400;
+            line-height: 1.72; max-width: 520px; margin: 0 auto;
         }
 
-        /* ─────────────────────────────────────────────
-           WHY / FEATURES
-        ───────────────────────────────────────────── */
+        /* ─── FEATURE CARDS ─── */
         .cards-3 {
-            max-width: 1240px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
         }
         @media (max-width: 1024px) { .cards-3 { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 640px)  { .cards-3 { grid-template-columns: 1fr; } }
+        @media (max-width: 620px)  { .cards-3 { grid-template-columns: 1fr; } }
 
         .feat-card {
-            background: white; border: 1px solid var(--border);
-            border-radius: var(--r-lg); padding: 2rem;
-            transition: all .32s cubic-bezier(.22,1,.36,1);
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-xl); padding: 2rem 1.75rem;
+            transition: transform .3s var(--ease-spring), box-shadow .3s;
             position: relative; overflow: hidden;
         }
         .feat-card::before {
-            content: ''; position: absolute; inset: -1px; border-radius: inherit;
-            background: var(--grad-brand); opacity: 0; transition: opacity .3s; z-index: 0;
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            background: linear-gradient(145deg, rgba(26,86,219,.04), rgba(6,182,212,.03));
+            opacity: 0; transition: opacity .3s;
         }
-        .feat-card::after {
-            content: ''; position: absolute; inset: 1px;
-            border-radius: calc(var(--r-lg) - 1px); background: white; z-index: 1;
-        }
-        .feat-card > * { position: relative; z-index: 2; }
-        .feat-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+        .feat-card:hover { transform: translateY(-7px); box-shadow: var(--sh-lg); }
         .feat-card:hover::before { opacity: 1; }
 
-        .feat-icon-wrap {
-            width: 56px; height: 56px; border-radius: var(--r-sm);
-            background: linear-gradient(135deg, rgba(37,99,235,.1), rgba(6,182,212,.1));
+        .feat-icon {
+            width: 52px; height: 52px; border-radius: var(--r-sm);
+            background: var(--grad-soft); border: 1px solid rgba(26,86,219,.12);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; margin-bottom: 1.4rem; transition: transform .3s;
+            font-size: 1.5rem; margin-bottom: 1.3rem;
+            transition: transform .3s var(--ease-spring);
         }
-        .feat-card:hover .feat-icon-wrap { transform: scale(1.1) rotate(-3deg); }
-        .feat-title { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .6rem; }
-        .feat-text { font-size: .9rem; color: var(--ink-soft); line-height: 1.65; }
+        .feat-card:hover .feat-icon { transform: scale(1.08) rotate(-4deg); }
+        .feat-h { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .55rem; letter-spacing: -.01em; }
+        .feat-p { font-size: .875rem; color: var(--ink-3); line-height: 1.65; }
 
-        /* ─────────────────────────────────────────────
-           HOW IT WORKS
-        ───────────────────────────────────────────── */
-        .steps-row {
-            max-width: 1240px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; position: relative;
+        /* ─── HOW IT WORKS ─── */
+        .steps {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;
+            position: relative;
         }
-        .steps-row::before {
+        .steps::before {
             content: ''; position: absolute;
-            top: 25px; left: calc(10% + 25px); right: calc(10% + 25px);
-            height: 2px; background: linear-gradient(90deg, var(--primary), var(--accent));
-            opacity: .25; z-index: 0;
+            top: 24px; left: calc(10% + 24px); right: calc(10% + 24px);
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            opacity: .2; z-index: 0;
         }
-        @media (max-width: 1024px) { .steps-row { grid-template-columns: repeat(3, 1fr); } .steps-row::before { display: none; } }
-        @media (max-width: 640px)  { .steps-row { grid-template-columns: 1fr; } }
+        @media (max-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); } .steps::before { display: none; } }
+        @media (max-width: 600px)  { .steps { grid-template-columns: 1fr; } }
 
-        .step-card {
-            background: white; border: 1px solid var(--border);
-            border-radius: var(--r-md); padding: 1.75rem 1.25rem;
-            text-align: center; transition: all .3s; position: relative; z-index: 1;
+        .step {
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-lg); padding: 1.6rem 1.25rem;
+            text-align: center; position: relative; z-index: 1;
+            transition: all .3s var(--ease-spring);
         }
-        .step-card:hover { border-color: var(--primary); box-shadow: 0 12px 32px rgba(37,99,235,.12); transform: translateY(-6px); }
+        .step:hover { border-color: var(--blue); box-shadow: 0 12px 36px rgba(26,86,219,.13); transform: translateY(-6px); }
+
         .step-num {
-            width: 50px; height: 50px; margin: 0 auto 1.25rem;
-            background: var(--grad-brand); color: white; border-radius: var(--r-sm);
+            width: 48px; height: 48px; margin: 0 auto 1.2rem;
+            background: var(--grad); color: #fff;
+            border-radius: var(--r-sm);
             display: flex; align-items: center; justify-content: center;
-            font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; transition: transform .3s;
+            font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+            transition: transform .3s var(--ease-spring);
         }
-        .step-card:hover .step-num { transform: scale(1.1) rotate(5deg); }
-        .step-title { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
-        .step-text  { font-size: .85rem; color: var(--ink-soft); line-height: 1.6; }
+        .step:hover .step-num { transform: scale(1.1) rotate(6deg); }
+        .step-h { font-family: var(--font-display); font-size: .92rem; font-weight: 700; color: var(--ink); margin-bottom: .45rem; }
+        .step-p { font-size: .82rem; color: var(--ink-3); line-height: 1.6; }
 
-        /* ─────────────────────────────────────────────
-           STATS BAND
-        ───────────────────────────────────────────── */
-        .stats-band { background: var(--grad-brand); padding: 5rem 2rem; position: relative; overflow: hidden; }
-        .stats-band::before {
+        /* ─── STATS BAND ─── */
+        .stats {
+            background: var(--ink); padding: 5rem 1.75rem; position: relative; overflow: hidden;
+        }
+        .stats::before {
             content: ''; position: absolute; inset: 0;
-            background-image: radial-gradient(rgba(255,255,255,.1) 1px, transparent 1px); background-size: 40px 40px;
+            background-image: radial-gradient(rgba(255,255,255,.06) 1.5px, transparent 1.5px);
+            background-size: 44px 44px;
         }
-        .stats-band-grid {
-            max-width: 1240px; margin: 0 auto;
+        .stats-grid {
+            max-width: 1200px; margin: 0 auto;
             display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 2rem; position: relative; z-index: 1; text-align: center; color: white;
+            gap: 2rem; position: relative; z-index: 1; text-align: center;
         }
-        @media (max-width: 1024px) { .stats-band-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px)  { .stats-band-grid { grid-template-columns: 1fr; } }
-        .sb-num { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: .4rem; }
-        .sb-label { font-size: .9rem; font-weight: 500; opacity: .9; }
+        @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px)  { .stats-grid { grid-template-columns: 1fr; } }
 
-        /* ─────────────────────────────────────────────
-           FEATURE SPLIT SECTIONS
-        ───────────────────────────────────────────── */
-        .split-section { padding: 6rem 2rem; }
-        .split-section.alt { background: var(--surface); }
+        .stat-num {
+            font-family: var(--font-display); font-size: 3rem; font-weight: 800;
+            letter-spacing: -.03em; line-height: 1; margin-bottom: .4rem;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-label { font-size: .9rem; font-weight: 500; color: rgba(255,255,255,.6); }
+
+        /* ─── SPLIT SECTIONS ─── */
+        .split { padding: 6rem 1.75rem; }
+        .split-bg { background: var(--white); }
+
         .split-inner {
-            max-width: 1240px; margin: 0 auto;
+            max-width: 1200px; margin: 0 auto;
             display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
         }
         @media (max-width: 1024px) {
             .split-inner { grid-template-columns: 1fr; gap: 3rem; }
-            .split-inner.reverse .split-text { order: 1; }
-            .split-inner.reverse .split-img  { order: 2; }
+            .split-inner.rev .split-text { order: 1; }
+            .split-inner.rev .split-vis  { order: 2; }
         }
-        .split-inner.reverse .split-text { order: 2; }
-        .split-inner.reverse .split-img  { order: 1; }
-        .split-text .section-label { display: inline-block; text-align: left; }
-        .split-text .section-title { text-align: left; font-size: clamp(1.8rem, 3vw, 2.4rem); }
+        .split-inner.rev .split-text { order: 2; }
+        .split-inner.rev .split-vis  { order: 1; }
+
+        .split-text .section-eyebrow { display: inline-block; }
+        .split-text .section-title { text-align: left; font-size: clamp(1.75rem, 2.8vw, 2.3rem); }
         .split-text .section-sub   { text-align: left; margin: 0 0 2rem; }
 
-        .split-checklist { list-style: none; display: flex; flex-direction: column; gap: .85rem; margin-bottom: 2rem; }
-        .split-checklist li { display: flex; align-items: flex-start; gap: .75rem; font-size: .95rem; color: var(--ink-mid); }
+        .check-list { list-style: none; display: flex; flex-direction: column; gap: .8rem; margin-bottom: 2rem; }
+        .check-list li { display: flex; align-items: flex-start; gap: .7rem; font-size: .92rem; color: var(--ink-2); }
         .check-icon {
-            width: 22px; height: 22px; background: rgba(37,99,235,.1); border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem;
+            width: 20px; height: 20px; border-radius: 6px;
+            background: rgba(26,86,219,.1);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: .15rem;
         }
-        .check-icon svg { color: var(--primary); }
+        .check-icon svg { color: var(--blue); }
 
-        /* Mini analytics illustration */
+        /* Mini dashboard illustration */
         .mini-dash {
-            background: white; border: 1px solid var(--border);
-            border-radius: var(--r-xl); padding: 1.8rem; box-shadow: var(--shadow-lg); position: relative;
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-xl); padding: 1.75rem;
+            box-shadow: var(--sh-lg); position: relative;
         }
         .mini-dash::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 4px; background: var(--grad-brand); border-radius: var(--r-xl) var(--r-xl) 0 0;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad); border-radius: var(--r-xl) var(--r-xl) 0 0;
         }
-        .mini-bar-row { display: flex; justify-content: space-between; align-items: flex-end; gap: .6rem; height: 120px; margin-top: 1rem; }
-        .mini-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: .4rem; flex: 1; }
-        .mini-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height .5s ease; }
-        .mini-bar.b1 { height: 60%; background: rgba(37,99,235,.85); }
-        .mini-bar.b2 { height: 80%; background: var(--grad-brand); }
-        .mini-bar.b3 { height: 45%; background: rgba(37,99,235,.55); }
-        .mini-bar.b4 { height: 90%; background: var(--grad-brand); }
-        .mini-bar.b5 { height: 70%; background: rgba(37,99,235,.7); }
-        .mini-bar.b6 { height: 55%; background: rgba(37,99,235,.5); }
-        .mini-bar.b7 { height: 85%; background: var(--grad-brand); }
-        .mini-bar-lbl { font-size: .68rem; font-weight: 600; color: var(--ink-soft); }
-        .mini-kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .8rem; margin-top: 1.2rem; }
-        .mini-kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .8rem; text-align: center; }
-        .mini-kpi-n { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--primary); }
-        .mini-kpi-l { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); margin-top: .2rem; }
+        .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .3rem; }
+        .dash-title { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--ink); }
+
+        .live-pill {
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .28rem .7rem;
+            background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.22);
+            border-radius: 100px;
+            font-size: .68rem; font-weight: 700; color: #10b981;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: pulse 1.8s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.85)} }
+
+        .bar-row { display: flex; justify-content: space-between; align-items: flex-end; gap: .55rem; height: 110px; margin: 1.1rem 0 0; }
+        .bar-col { display: flex; flex-direction: column; align-items: center; gap: .35rem; flex: 1; }
+        .bar { width: 100%; border-radius: 5px 5px 0 0; }
+        .bar-lbl { font-size: .65rem; font-weight: 600; color: var(--ink-4); }
+        .b1 { height: 58%; background: rgba(26,86,219,.75); }
+        .b2 { height: 82%; background: var(--grad); }
+        .b3 { height: 44%; background: rgba(26,86,219,.5); }
+        .b4 { height: 92%; background: var(--grad); }
+        .b5 { height: 68%; background: rgba(26,86,219,.65); }
+        .b6 { height: 52%; background: rgba(26,86,219,.45); }
+        .b7 { height: 78%; background: var(--grad); }
+
+        .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin-top: 1.1rem; }
+        .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .75rem; text-align: center; }
+        .kpi-n { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; color: var(--blue); }
+        .kpi-l { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-4); margin-top: .18rem; }
 
         /* Map illustration */
-        .map-mock { background: white; border: 1px solid var(--border); border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-lg); position: relative; }
-        .map-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .map-title { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--ink); }
-        .map-body { height: 260px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdff 100%); position: relative; display: flex; align-items: center; justify-content: center; }
-        .map-grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(37,99,235,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,.07) 1px, transparent 1px); background-size: 30px 30px; }
-        .map-pins { position: relative; z-index: 1; display: flex; gap: 2rem; }
-        .map-pin { display: flex; flex-direction: column; align-items: center; gap: .4rem; cursor: pointer; transition: transform .2s; }
-        .map-pin:hover { transform: scale(1.1) translateY(-4px); }
-        .pin-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 800; color: white; box-shadow: 0 6px 16px rgba(0,0,0,.15); }
-        .pin-circle.g { background: #10b981; }
-        .pin-circle.r { background: #ef4444; }
-        .pin-circle.y { background: #f59e0b; }
-        .pin-lbl { font-size: .72rem; font-weight: 700; color: var(--ink-mid); background: white; padding: .2rem .5rem; border-radius: 6px; box-shadow: var(--shadow-sm); }
+        .map-mock {
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--sh-lg);
+        }
+        .map-head { padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .map-title { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--ink); }
+        .map-body { height: 240px; background: linear-gradient(135deg, #eef4ff 0%, #e9f9ff 100%); position: relative; display: flex; align-items: center; justify-content: center; }
+        .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,219,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,219,.06) 1px, transparent 1px); background-size: 28px 28px; }
+        .map-pins { position: relative; z-index: 1; display: flex; gap: 2.5rem; }
+        .map-pin { display: flex; flex-direction: column; align-items: center; gap: .4rem; cursor: pointer; transition: transform .2s var(--ease-spring); }
+        .map-pin:hover { transform: scale(1.1) translateY(-5px); }
+        .pin-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: .78rem; font-weight: 800; color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.14); }
+        .pin-g { background: #10b981; }
+        .pin-r { background: #ef4444; }
+        .pin-y { background: #f59e0b; }
+        .pin-lbl { font-size: .7rem; font-weight: 700; color: var(--ink-2); background: #fff; padding: .2rem .5rem; border-radius: 6px; box-shadow: var(--sh-sm); }
 
-        /* ─────────────────────────────────────────────
-           TESTIMONIALS
-        ───────────────────────────────────────────── */
+        /* ─── TESTIMONIALS ─── */
         .testi-grid {
-            max-width: 1240px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
         }
         @media (max-width: 1024px) { .testi-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 640px)  { .testi-grid { grid-template-columns: 1fr; } }
-        .testi-card {
-            background: white; border: 1px solid var(--border); border-radius: var(--r-lg);
-            padding: 2rem; transition: all .3s;
-        }
-        .testi-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
-        .testi-stars { display: flex; gap: .2rem; margin-bottom: 1rem; }
-        .star { color: #f59e0b; font-size: 1rem; }
-        .testi-quote { font-size: .95rem; color: var(--ink-mid); line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
-        .testi-author { display: flex; align-items: center; gap: .85rem; }
-        .testi-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .9rem; font-weight: 800; color: white; flex-shrink: 0; }
-        .testi-name { font-size: .9rem; font-weight: 700; color: var(--ink); }
-        .testi-role { font-size: .78rem; color: var(--ink-soft); }
+        @media (max-width: 620px)  { .testi-grid { grid-template-columns: 1fr; } }
 
-        /* ─────────────────────────────────────────────
-           CTA SECTION
-        ───────────────────────────────────────────── */
-        .cta-section { padding: 7rem 2rem; background: white; }
+        .testi {
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-xl); padding: 1.9rem;
+            transition: transform .3s var(--ease-spring), box-shadow .3s;
+        }
+        .testi:hover { transform: translateY(-6px); box-shadow: var(--sh-md); }
+        .stars { display: flex; gap: .15rem; margin-bottom: .9rem; color: #f59e0b; font-size: .95rem; }
+        .testi-q { font-size: .92rem; color: var(--ink-2); line-height: 1.72; margin-bottom: 1.4rem; font-style: italic; }
+        .testi-auth { display: flex; align-items: center; gap: .8rem; }
+        .testi-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: .85rem; font-weight: 800; color: #fff; flex-shrink: 0; }
+        .testi-name { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--ink); }
+        .testi-role { font-size: .76rem; color: var(--ink-4); }
+
+        /* ─── CTA BOX ─── */
+        .cta-section { padding: 6.5rem 1.75rem; background: var(--white); }
         .cta-box {
-            max-width: 900px; margin: 0 auto; background: var(--ink);
-            border-radius: var(--r-xl); padding: 5.5rem 3rem; text-align: center; position: relative; overflow: hidden;
+            max-width: 880px; margin: 0 auto;
+            background: var(--ink); border-radius: var(--r-2xl);
+            padding: 5.5rem 2.5rem; text-align: center; position: relative; overflow: hidden;
         }
         .cta-box::before {
-            content: ''; position: absolute; top: -50%; left: -20%;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(37,99,235,.35) 0%, transparent 70%);
-            border-radius: 50%; animation: orbFloat1 8s ease-in-out infinite;
+            content: ''; position: absolute;
+            top: -50%; left: -20%;
+            width: 550px; height: 550px;
+            background: radial-gradient(circle, rgba(26,86,219,.35) 0%, transparent 65%);
+            border-radius: 50%; animation: float1 9s ease-in-out infinite;
         }
         .cta-box::after {
-            content: ''; position: absolute; bottom: -40%; right: -10%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(6,182,212,.25) 0%, transparent 70%);
-            border-radius: 50%; animation: orbFloat2 10s ease-in-out infinite;
+            content: ''; position: absolute;
+            bottom: -40%; right: -10%;
+            width: 380px; height: 380px;
+            background: radial-gradient(circle, rgba(6,182,212,.22) 0%, transparent 65%);
+            border-radius: 50%; animation: float2 11s ease-in-out infinite;
         }
         .cta-box > * { position: relative; z-index: 1; }
-        .cta-title  { font-size: clamp(2rem,4vw,3rem); color: white; margin-bottom: .75rem; }
-        .cta-sub    { font-size: 1.1rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; font-weight: 300; }
-        .cta-btns   { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .cta-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: -.025em; color: #fff; margin-bottom: .7rem; }
+        .cta-sub { font-size: 1.1rem; color: rgba(255,255,255,.65); margin-bottom: 2.5rem; font-weight: 400; }
+        .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
         .btn-white {
-            display: inline-flex; align-items: center; gap: .6rem;
-            padding: .9rem 2.1rem; background: white; color: var(--primary);
-            font-weight: 700; font-size: 1rem; border-radius: var(--r-md); border: none;
-            cursor: pointer; transition: all .3s;
+            display: inline-flex; align-items: center; gap: .55rem;
+            padding: .95rem 2.2rem; background: #fff; color: var(--blue);
+            font-family: var(--font-body); font-weight: 700; font-size: 1rem;
+            border-radius: var(--r-md); border: none; cursor: pointer;
+            transition: all .3s var(--ease-spring);
         }
-        .btn-white:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,0,0,.2); }
+        .btn-white:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.22); }
 
         .btn-outline-white {
-            display: inline-flex; align-items: center; gap: .6rem;
-            padding: .9rem 2.1rem; background: transparent; color: white;
-            font-weight: 700; font-size: 1rem; border-radius: var(--r-md);
-            border: 1.5px solid rgba(255,255,255,.3); cursor: pointer; transition: all .3s;
+            display: inline-flex; align-items: center; gap: .55rem;
+            padding: .95rem 2.2rem; background: transparent; color: #fff;
+            font-family: var(--font-body); font-weight: 700; font-size: 1rem;
+            border-radius: var(--r-md); border: 1.5px solid rgba(255,255,255,.28);
+            cursor: pointer; transition: all .3s;
         }
-        .btn-outline-white:hover { background: rgba(255,255,255,.1); border-color: white; }
+        .btn-outline-white:hover { background: rgba(255,255,255,.1); border-color: #fff; }
 
-        /* ─────────────────────────────────────────────
-           TEAM
-        ───────────────────────────────────────────── */
+        /* ─── TEAM ─── */
         .team-grid {
-            max-width: 1240px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;
         }
         @media (max-width: 1024px) { .team-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 640px)  { .team-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 620px)  { .team-grid { grid-template-columns: 1fr; } }
+
         .team-card {
-            background: white; border: 1px solid var(--border);
-            border-radius: var(--r-lg); padding: 2rem 1.5rem;
-            text-align: center; transition: all .32s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden;
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-xl); padding: 2rem 1.5rem;
+            text-align: center; transition: all .32s var(--ease-spring); overflow: hidden; position: relative;
         }
-        .team-card::before {
+        .team-card::after {
             content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-            height: 4px; background: var(--grad-brand); transform: scaleX(0); transition: transform .3s; transform-origin: left;
+            height: 3px; background: var(--grad);
+            transform: scaleX(0); transition: transform .3s; transform-origin: left;
         }
-        .team-card:hover::before { transform: scaleX(1); }
-        .team-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
-        .team-avatar {
-            width: 76px; height: 76px; margin: 0 auto 1.25rem; border-radius: 50%;
+        .team-card:hover::after { transform: scaleX(1); }
+        .team-card:hover { transform: translateY(-7px); box-shadow: var(--sh-lg); }
+        .team-av {
+            width: 72px; height: 72px; margin: 0 auto 1.2rem; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: white;
+            font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; color: #fff;
         }
-        .av-blue   { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-        .av-green  { background: linear-gradient(135deg, #10b981, #34d399); }
-        .av-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-        .av-orange { background: linear-gradient(135deg, #f97316, #fb923c); }
-        .team-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
-        .team-role { display: inline-block; font-size: .78rem; font-weight: 600; background: rgba(37,99,235,.1); color: var(--primary); padding: .3rem .8rem; border-radius: 100px; }
+        .av-a { background: linear-gradient(135deg, #1a56db, #3b82f6); }
+        .av-s { background: linear-gradient(135deg, #10b981, #34d399); }
+        .av-s2 { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .av-m { background: linear-gradient(135deg, #f97316, #fb923c); }
+        .team-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+        .team-role { display: inline-block; font-size: .76rem; font-weight: 700; background: rgba(26,86,219,.09); color: var(--blue); padding: .28rem .8rem; border-radius: 100px; }
 
-        /* ─────────────────────────────────────────────
-           FEATURE BADGES
-        ───────────────────────────────────────────── */
-        .badges-wrap { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: .85rem; justify-content: center; }
-        .feat-badge {
-            display: inline-flex; align-items: center; gap: .5rem;
-            padding: .7rem 1.25rem; background: white; border: 1.5px solid var(--border);
-            border-radius: var(--r-sm); font-size: .875rem; font-weight: 600; color: var(--ink-mid); transition: all .2s;
+        /* ─── BADGES ─── */
+        .badges {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center;
         }
-        .feat-badge:hover { border-color: var(--primary); background: rgba(37,99,235,.05); color: var(--primary); transform: translateY(-2px); }
-        .feat-badge svg { color: var(--primary); }
-
-        /* Live pill / dots reused */
-        .live-pill {
+        .badge {
             display: inline-flex; align-items: center; gap: .45rem;
-            padding: .3rem .75rem; background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25);
-            border-radius: 100px; font-size: .72rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: .05em;
+            padding: .65rem 1.2rem;
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+            font-family: var(--font-body); font-size: .85rem; font-weight: 600;
+            color: var(--ink-2); transition: all .2s;
         }
-        .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.9)} }
+        .badge:hover { border-color: var(--blue); background: rgba(26,86,219,.04); color: var(--blue); transform: translateY(-2px); }
+        .badge svg { color: var(--blue); }
 
-        /* ─────────────────────────────────────────────
-           FOOTER
-        ───────────────────────────────────────────── */
-        .footer { background: var(--ink); padding: 5rem 2rem 0; }
-        .footer-inner { max-width: 1240px; margin: 0 auto; }
-        .footer-top {
-            display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 3rem;
-            padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.07);
+        /* ─── FOOTER ─── */
+        .footer { background: var(--ink); padding: 5rem 1.75rem 0; }
+        .footer-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 3rem;
+            padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,.06);
         }
-        @media (max-width: 1024px) { .footer-top { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 640px)  { .footer-top { grid-template-columns: 1fr; } }
-        .footer-brand-col .footer-logo {
-            font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: white;
-            display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem;
+        @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 620px)  { .footer-grid { grid-template-columns: 1fr; } }
+
+        .footer-logo-wrap {
+            font-family: var(--font-display); font-size: 1.35rem; font-weight: 800;
+            color: #fff; display: flex; align-items: center; gap: .45rem; margin-bottom: 1rem;
         }
-        .footer-logo-icon { width: 30px; height: 30px; background: var(--grad-brand); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .footer-logo span { color: var(--primary-light); }
-        .footer-desc { font-size: .875rem; color: #64748b; line-height: 1.7; max-width: 280px; }
-        .footer-col h4 { font-family: 'Syne', sans-serif; font-size: .875rem; font-weight: 700; color: white; margin-bottom: 1.25rem; letter-spacing: .02em; }
+        .footer-logo-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--grad); display: flex; align-items: center; justify-content: center; }
+        .footer-logo-mark svg { width: 14px; height: 14px; }
+        .footer-logo-wrap .accent { color: var(--blue-light); }
+        .footer-desc { font-size: .875rem; color: #556;  line-height: 1.7; max-width: 265px; color: rgba(255,255,255,.38); }
+        .footer-col h4 { font-family: var(--font-display); font-size: .875rem; font-weight: 700; color: rgba(255,255,255,.85); margin-bottom: 1.25rem; }
         .footer-col ul { list-style: none; }
-        .footer-col ul li { margin-bottom: .7rem; }
-        .footer-col a { font-size: .875rem; color: #64748b; transition: color .2s; }
-        .footer-col a:hover { color: white; }
-        .footer-bottom { padding: 2rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
-        .footer-copy { font-size: .8rem; color: #475569; }
-        .footer-socials { display: flex; gap: .75rem; }
-        .social-btn {
-            width: 36px; height: 36px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08);
-            border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center;
-            color: #64748b; transition: all .2s;
-        }
-        .social-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
+        .footer-col ul li { margin-bottom: .65rem; }
+        .footer-col a { font-size: .875rem; color: rgba(255,255,255,.38); transition: color .18s; }
+        .footer-col a:hover { color: rgba(255,255,255,.9); }
 
-        /* ─────────────────────────────────────────────
-           LANGUAGE TRANSITION OVERLAY
-        ───────────────────────────────────────────── */
-        .lang-transitioning * { transition: opacity .15s ease !important; }
+        .footer-bottom {
+            max-width: 1200px; margin: 0 auto;
+            padding: 2rem 0;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        .footer-copy { font-size: .78rem; color: rgba(255,255,255,.28); }
+        .footer-socials { display: flex; gap: .65rem; }
+        .social-btn {
+            width: 34px; height: 34px;
+            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+            border-radius: var(--r-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,.35); transition: all .2s;
+        }
+        .social-btn:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+        /* ─── LANG TOGGLE ─── */
         [data-lang-nl], [data-lang-en] { transition: none; }
     </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════
-     NAVBAR
-═══════════════════════════════════════════════════ -->
-<nav class="navbar" id="navbar">
-    <a href="/" class="navbar-brand">
-        <div class="brand-icon">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+<!-- NAVBAR -->
+<nav class="nav" id="nav">
+    <a href="/" class="nav-logo">
+        <div class="nav-logo-mark">
+            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
         </div>
-        Smart<span>Parking</span>
+        Smart<span class="accent">Parking</span>
     </a>
 
-    <div class="navbar-center">
+    <nav class="nav-links">
         <a href="#features" class="nav-link" data-lang-nl="Functies" data-lang-en="Features">Functies</a>
         <a href="#how"      class="nav-link" data-lang-nl="Hoe het werkt" data-lang-en="How it works">Hoe het werkt</a>
         <a href="#team"     class="nav-link" data-lang-nl="Team" data-lang-en="Team">Team</a>
-        <a href="#pricing"  class="nav-link" data-lang-nl="Prijzen" data-lang-en="Pricing">Prijzen</a>
-    </div>
+    </nav>
 
-    <div class="navbar-right">
-        <button class="lang-btn" id="langToggle" onclick="toggleLang()" aria-label="Toggle language">
+    <div class="nav-actions">
+        <button class="btn-lang" id="langToggle" onclick="toggleLang()" aria-label="Toggle language">
             <span id="langTxt">🇳🇱 NL</span>
-            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </button>
+
         @auth
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}" class="btn-ghost" data-lang-nl="Dashboard" data-lang-en="Dashboard">Dashboard</a>
@@ -950,103 +771,76 @@
         @else
             <a href="{{ route('login') }}" class="btn-ghost" data-lang-nl="Log in" data-lang-en="Log in">Log in</a>
             @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="btn-primary" data-lang-nl="Begin nu →" data-lang-en="Get started →">Begin nu →</a>
+                <a href="{{ route('register') }}" class="btn-cta" data-lang-nl="Begin nu →" data-lang-en="Get started →">Begin nu →</a>
             @endif
         @endauth
     </div>
 </nav>
 
 
-<!-- ═══════════════════════════════════════════════════
-     HERO — Premium SaaS style, centred layout
-═══════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     HERO  —  single-column editorial layout
+     Order: badge → h1 → sub → buttons → social proof → image
+     ═══════════════════════════════════════════════════════════ -->
 <section class="hero">
-    <!-- Ambient orbs -->
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <div class="hero-orb hero-orb-3"></div>
-
-    <!-- Text content -->
-
+    <!-- Copy block -->
+    <div class="hero-inner">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span data-lang-nl="Slimme parkeeroplossing" data-lang-en="Smart parking solution">Slimme parkeeroplossing</span>
+        </div>
 
         <h1 class="hero-h1">
-            <span data-lang-nl="Vind sneller" data-lang-en="Find parking">Vind sneller</span>
-            <br>
-            <span class="gradient-text" data-lang-nl="een parkeerplaats." data-lang-en="faster than ever.">een parkeerplaats.</span>
+            <span data-lang-nl="Parkeren, maar dan" data-lang-en="Parking, but">Parkeren, maar dan</span><br>
+            <em class="gradient-text" data-lang-nl="echt slim." data-lang-en="actually smart.">echt slim.</em>
         </h1>
 
+        <p class="hero-sub" data-lang-nl="Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal." data-lang-en="Find and reserve your parking spot in seconds. Real-time availability, secure payment — anywhere, anytime.">Vind en reserveer je parkeerplaats in seconden. Realtime beschikbaarheid, veilige betaling — altijd en overal.</p>
 
-
-        <div class="hero-cta">
+        <div class="hero-buttons">
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" class="btn-primary btn-primary-lg" data-lang-nl="Admin Dashboard →" data-lang-en="Admin Dashboard →">Admin Dashboard →</a>
+                    <a href="{{ route('admin.dashboard') }}" class="btn-hero-primary" data-lang-nl="Admin Dashboard →" data-lang-en="Admin Dashboard →">Admin Dashboard →</a>
                 @else
-                    <a href="{{ route('user.reserve') }}" class="btn-primary btn-primary-lg">
+                    <a href="{{ route('user.reserve') }}" class="btn-hero-primary">
                         <span data-lang-nl="Parkeerplaats vinden" data-lang-en="Find parking">Parkeerplaats vinden</span>
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </a>
-                    <a href="{{ route('user.dashboard') }}" class="btn-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
+                    <a href="{{ route('user.dashboard') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
                 @endif
             @else
-                <a href="{{ route('login') }}" class="btn-primary btn-primary-lg">
+                <a href="{{ route('login') }}" class="btn-hero-primary">
                     <span data-lang-nl="Gratis starten" data-lang-en="Get started free">Gratis starten</span>
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </a>
-                <a href="{{ route('login') }}" class="btn-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
+                <a href="{{ route('login') }}" class="btn-hero-secondary" data-lang-nl="Meer info" data-lang-en="Learn more">Meer info</a>
             @endauth
         </div>
 
-        <div class="hero-social-proof">
-            <div class="hero-avatars">
-                <div class="hero-avatar">A</div>
-                <div class="hero-avatar" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
-                <div class="hero-avatar" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">S</div>
-                <div class="hero-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">M</div>
+        <div class="hero-proof">
+            <div class="proof-avatars">
+                <div class="proof-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">A</div>
+                <div class="proof-av" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
+                <div class="proof-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">S</div>
+                <div class="proof-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">M</div>
             </div>
-            <div class="hero-sp-text">
+            <div class="proof-text">
                 <span data-lang-nl="Al <strong>50.000+</strong> gebruikers parkeren slimmer" data-lang-en="Already <strong>50,000+</strong> users park smarter">Al <strong>50.000+</strong> gebruikers parkeren slimmer</span>
             </div>
         </div>
+    </div><!-- /hero-inner -->
+
+    <!-- ▼ Hero image — same section, directly below social proof ▼ -->
+    <div class="hero-img-wrap">
+        <img src="{{ asset('images/hero.jpg') }}" alt="SmartParking — vind snel een parkeerplaats" loading="lazy">
     </div>
 
-    <!-- ── Hero image panel ──────────────────────────
-         INSTRUCTIONS TO REPLACE IMAGE:
-         Option A (real image):
-           Replace the <div class="hero-image-placeholder"> block with:
-           <img src="{{ asset('images/your-hero.jpg') }}" alt="SmartParking dashboard" class="hero-real-image" loading="lazy">
-
-         Option B (storage image):
-           <img src="{{ Storage::url('hero.jpg') }}" alt="SmartParking dashboard" class="hero-real-image" loading="lazy">
-
-         Recommended: landscape image, min 1200×500px
-    ─────────────────────────────────────────────── -->
-    <div class="hero-visual-wrap">
-        <div class="hero-panel">
-            <!-- Browser chrome bar -->
-            <div class="panel-topbar">
-                <span class="panel-dot r"></span>
-                <span class="panel-dot y"></span>
-                <span class="panel-dot g"></span>
-                <div class="panel-url-bar">
-                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                    <div class="panel-url-pill">smartparking.nl/dashboard</div>
-                </div>
-            </div>
-
-            <!-- ↓ PLACEHOLDER — swap with <img> when you have a real image ↓ -->
-<img src="{{ asset('images/hero.jpg') }}" 
-     alt="SmartParking dashboard" 
-     class="hero-real-image" 
-     loading="lazy">
-</section>
+</section><!-- /hero -->
 
 
-<!-- ═══════════════════════════════════════════════════
-     TRUST BAR
-═══════════════════════════════════════════════════ -->
-<div class="trust-bar reveal">
-    <div class="trust-inner">
+<!-- TRUST BAR -->
+<div class="trust reveal">
+    <div class="trust-grid">
         <div class="trust-item">
             <div class="trust-num">50K+</div>
             <div class="trust-label" data-lang-nl="Actieve gebruikers" data-lang-en="Active users">Actieve gebruikers</div>
@@ -1067,100 +861,95 @@
 </div>
 
 
-<!-- ═══════════════════════════════════════════════════
-     WHY CHOOSE US
-═══════════════════════════════════════════════════ -->
-<section class="section section-alt" id="features">
-    <div class="section-header reveal">
-        <div class="section-label" data-lang-nl="Voordelen" data-lang-en="Benefits">Voordelen</div>
+<!-- FEATURES -->
+<section class="section section-white" id="features">
+    <div class="section-head reveal">
+        <div class="section-eyebrow" data-lang-nl="Voordelen" data-lang-en="Benefits">Voordelen</div>
         <h2 class="section-title" data-lang-nl="Waarom SmartParking?" data-lang-en="Why SmartParking?">Waarom SmartParking?</h2>
         <p class="section-sub" data-lang-nl="We maken parkeren niet alleen gemakkelijker, maar ook slimmer, sneller en veiliger dan ooit." data-lang-en="We make parking not just easier, but smarter, faster and safer than ever.">We maken parkeren niet alleen gemakkelijker, maar ook slimmer, sneller en veiliger dan ooit.</p>
     </div>
-
     <div class="cards-3">
-        <div class="feat-card reveal delay-1">
-            <div class="feat-icon-wrap">⚡</div>
-            <h3 class="feat-title" data-lang-nl="Realtime Beschikbaarheid" data-lang-en="Real-time Availability">Realtime Beschikbaarheid</h3>
-            <p class="feat-text" data-lang-nl="Weet altijd exact hoeveel plaatsen vrij zijn. Live updates elke seconde, geen wachten, geen stress." data-lang-en="Always know exactly how many spots are free. Live updates every second — no waiting, no stress.">Weet altijd exact hoeveel plaatsen vrij zijn. Live updates elke seconde, geen wachten, geen stress.</p>
+        <div class="feat-card reveal d1">
+            <div class="feat-icon">⚡</div>
+            <h3 class="feat-h" data-lang-nl="Realtime Beschikbaarheid" data-lang-en="Real-time Availability">Realtime Beschikbaarheid</h3>
+            <p class="feat-p" data-lang-nl="Live updates elke seconde. Weet altijd exact hoeveel plekken vrij zijn — geen wachten, geen stress." data-lang-en="Live updates every second. Always know exactly how many spots are free — no waiting, no stress.">Live updates elke seconde. Weet altijd exact hoeveel plekken vrij zijn — geen wachten, geen stress.</p>
         </div>
-        <div class="feat-card reveal delay-2">
-            <div class="feat-icon-wrap">🎯</div>
-            <h3 class="feat-title" data-lang-nl="1 Klik Reserveren" data-lang-en="1-Click Booking">1 Klik Reserveren</h3>
-            <p class="feat-text" data-lang-nl="Je plek is binnen enkele seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar." data-lang-en="Your spot is reserved within seconds. No hassle, no complicated process — just click and go.">Je plek is binnen enkele seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar.</p>
+        <div class="feat-card reveal d2">
+            <div class="feat-icon">🎯</div>
+            <h3 class="feat-h" data-lang-nl="1 Klik Reserveren" data-lang-en="1-Click Booking">1 Klik Reserveren</h3>
+            <p class="feat-p" data-lang-nl="Je plek is in seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar." data-lang-en="Your spot reserved in seconds. No hassle, no complicated process — just click and go.">Je plek is in seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar.</p>
         </div>
-        <div class="feat-card reveal delay-3">
-            <div class="feat-icon-wrap">🔒</div>
-            <h3 class="feat-title" data-lang-nl="Veilig & Secure" data-lang-en="Safe & Secure">Veilig & Secure</h3>
-            <p class="feat-text" data-lang-nl="Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens zijn altijd in veilige handen." data-lang-en="Enterprise-grade encryption and multi-factor authentication. Your data is always in safe hands.">Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens zijn altijd in veilige handen.</p>
+        <div class="feat-card reveal d3">
+            <div class="feat-icon">🔒</div>
+            <h3 class="feat-h" data-lang-nl="Veilig & Secure" data-lang-en="Safe & Secure">Veilig & Secure</h3>
+            <p class="feat-p" data-lang-nl="Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens altijd in veilige handen." data-lang-en="Enterprise-grade encryption and multi-factor authentication. Your data always in safe hands.">Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens altijd in veilige handen.</p>
         </div>
-        <div class="feat-card reveal delay-1">
-            <div class="feat-icon-wrap">📱</div>
-            <h3 class="feat-title" data-lang-nl="100% Responsive" data-lang-en="100% Responsive">100% Responsive</h3>
-            <p class="feat-text" data-lang-nl="Perfecte ervaring op alle apparaten. Desktop, tablet, telefoon — elke pixel klopt." data-lang-en="Perfect experience on all devices. Desktop, tablet, phone — every pixel is right.">Perfecte ervaring op alle apparaten. Desktop, tablet, telefoon — elke pixel klopt.</p>
+        <div class="feat-card reveal d1">
+            <div class="feat-icon">📱</div>
+            <h3 class="feat-h" data-lang-nl="100% Responsive" data-lang-en="100% Responsive">100% Responsive</h3>
+            <p class="feat-p" data-lang-nl="Perfecte ervaring op elk apparaat. Desktop, tablet, telefoon — elke pixel klopt." data-lang-en="Perfect experience on every device. Desktop, tablet, phone — every pixel is right.">Perfecte ervaring op elk apparaat. Desktop, tablet, telefoon — elke pixel klopt.</p>
         </div>
-        <div class="feat-card reveal delay-2">
-            <div class="feat-icon-wrap">💳</div>
-            <h3 class="feat-title" data-lang-nl="Veilige Betaling" data-lang-en="Secure Payment">Veilige Betaling</h3>
-            <p class="feat-text" data-lang-nl="Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant." data-lang-en="Integration with leading payment systems. Fast, secure and PCI-compliant.">Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant.</p>
+        <div class="feat-card reveal d2">
+            <div class="feat-icon">💳</div>
+            <h3 class="feat-h" data-lang-nl="Veilige Betaling" data-lang-en="Secure Payment">Veilige Betaling</h3>
+            <p class="feat-p" data-lang-nl="Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant." data-lang-en="Integration with leading payment systems. Fast, secure and PCI-compliant.">Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant.</p>
         </div>
-        <div class="feat-card reveal delay-3">
-            <div class="feat-icon-wrap">📊</div>
-            <h3 class="feat-title" data-lang-nl="Volledig Beheer" data-lang-en="Full Management">Volledig Beheer</h3>
-            <p class="feat-text" data-lang-nl="Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis." data-lang-en="Manage all your reservations from one dashboard. Modify, cancel or view your complete history.">Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis.</p>
+        <div class="feat-card reveal d3">
+            <div class="feat-icon">📊</div>
+            <h3 class="feat-h" data-lang-nl="Volledig Beheer" data-lang-en="Full Management">Volledig Beheer</h3>
+            <p class="feat-p" data-lang-nl="Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis." data-lang-en="Manage all reservations from one dashboard. Modify, cancel or view your complete history.">Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis.</p>
         </div>
     </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     SPLIT SECTION A
-═══════════════════════════════════════════════════ -->
-<section class="split-section">
+<!-- SPLIT A — Analytics -->
+<section class="split section-surface">
     <div class="split-inner">
         <div class="split-text reveal">
-            <div class="section-label" data-lang-nl="Analytics" data-lang-en="Analytics">Analytics</div>
+            <div class="section-eyebrow" data-lang-nl="Analytics" data-lang-en="Analytics">Analytics</div>
             <h2 class="section-title" data-lang-nl="Volledige inzichten op één plek" data-lang-en="Complete insights in one place">Volledige inzichten op één plek</h2>
-            <p class="section-sub" data-lang-nl="Bekijk bezettingsgraad, piekuren en trends — zodat jij slimmer kunt plannen en beheren." data-lang-en="View occupancy rates, peak hours and trends — so you can plan and manage smarter.">Bekijk bezettingsgraad, piekuren en trends — zodat jij slimmer kunt plannen en beheren.</p>
-            <ul class="split-checklist">
+            <p class="section-sub" data-lang-nl="Bekijk bezettingsgraad, piekuren en trends — plan en beheer slimmer." data-lang-en="View occupancy rates, peak hours and trends — plan and manage smarter.">Bekijk bezettingsgraad, piekuren en trends — plan en beheer slimmer.</p>
+            <ul class="check-list">
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="Live bezettingsgraad per locatie" data-lang-en="Live occupancy rate per location">Live bezettingsgraad per locatie</span>
                 </li>
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="Historische data en trendanalyses" data-lang-en="Historical data and trend analyses">Historische data en trendanalyses</span>
                 </li>
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="Exporteerbare rapporten (PDF/CSV)" data-lang-en="Exportable reports (PDF/CSV)">Exporteerbare rapporten (PDF/CSV)</span>
                 </li>
             </ul>
             @auth
-                <a href="{{ route('user.dashboard') }}" class="btn-primary btn-primary-lg" data-lang-nl="Bekijk dashboard" data-lang-en="View dashboard">Bekijk dashboard</a>
+                <a href="{{ route('user.dashboard') }}" class="btn-hero-primary" data-lang-nl="Bekijk dashboard" data-lang-en="View dashboard">Bekijk dashboard</a>
             @else
-                <a href="{{ route('register') }}" class="btn-primary btn-primary-lg" data-lang-nl="Gratis proberen →" data-lang-en="Try for free →">Gratis proberen →</a>
+                <a href="{{ route('register') }}" class="btn-hero-primary" data-lang-nl="Gratis proberen →" data-lang-en="Try for free →">Gratis proberen →</a>
             @endauth
         </div>
 
-        <div class="split-img reveal delay-2">
+        <div class="split-vis reveal d2">
             <div class="mini-dash">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink);" data-lang-nl="Bezetting deze week" data-lang-en="Occupancy this week">Bezetting deze week</div>
+                <div class="dash-head">
+                    <div class="dash-title" data-lang-nl="Bezetting deze week" data-lang-en="Occupancy this week">Bezetting deze week</div>
                     <div class="live-pill"><span class="live-dot"></span>Live</div>
                 </div>
-                <div class="mini-bar-row">
-                    <div class="mini-bar-wrap"><div class="mini-bar b1"></div><div class="mini-bar-lbl" data-lang-nl="Ma" data-lang-en="Mon">Ma</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b2"></div><div class="mini-bar-lbl" data-lang-nl="Di" data-lang-en="Tue">Di</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b3"></div><div class="mini-bar-lbl" data-lang-nl="Wo" data-lang-en="Wed">Wo</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b4"></div><div class="mini-bar-lbl" data-lang-nl="Do" data-lang-en="Thu">Do</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b5"></div><div class="mini-bar-lbl" data-lang-nl="Vr" data-lang-en="Fri">Vr</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b6"></div><div class="mini-bar-lbl" data-lang-nl="Za" data-lang-en="Sat">Za</div></div>
-                    <div class="mini-bar-wrap"><div class="mini-bar b7"></div><div class="mini-bar-lbl" data-lang-nl="Zo" data-lang-en="Sun">Zo</div></div>
+                <div class="bar-row">
+                    <div class="bar-col"><div class="bar b1"></div><div class="bar-lbl" data-lang-nl="Ma" data-lang-en="Mon">Ma</div></div>
+                    <div class="bar-col"><div class="bar b2"></div><div class="bar-lbl" data-lang-nl="Di" data-lang-en="Tue">Di</div></div>
+                    <div class="bar-col"><div class="bar b3"></div><div class="bar-lbl" data-lang-nl="Wo" data-lang-en="Wed">Wo</div></div>
+                    <div class="bar-col"><div class="bar b4"></div><div class="bar-lbl" data-lang-nl="Do" data-lang-en="Thu">Do</div></div>
+                    <div class="bar-col"><div class="bar b5"></div><div class="bar-lbl" data-lang-nl="Vr" data-lang-en="Fri">Vr</div></div>
+                    <div class="bar-col"><div class="bar b6"></div><div class="bar-lbl" data-lang-nl="Za" data-lang-en="Sat">Za</div></div>
+                    <div class="bar-col"><div class="bar b7"></div><div class="bar-lbl" data-lang-nl="Zo" data-lang-en="Sun">Zo</div></div>
                 </div>
-                <div class="mini-kpi-row">
-                    <div class="mini-kpi"><div class="mini-kpi-n">78%</div><div class="mini-kpi-l" data-lang-nl="Gem. bezetting" data-lang-en="Avg. occupancy">Gem. bezetting</div></div>
-                    <div class="mini-kpi"><div class="mini-kpi-n">342</div><div class="mini-kpi-l" data-lang-nl="Reserveringen" data-lang-en="Reservations">Reserveringen</div></div>
-                    <div class="mini-kpi"><div class="mini-kpi-n">€ 12K</div><div class="mini-kpi-l" data-lang-nl="Omzet" data-lang-en="Revenue">Omzet</div></div>
+                <div class="kpi-row">
+                    <div class="kpi"><div class="kpi-n">78%</div><div class="kpi-l" data-lang-nl="Gem. bezetting" data-lang-en="Avg. occupancy">Gem. bezetting</div></div>
+                    <div class="kpi"><div class="kpi-n">342</div><div class="kpi-l" data-lang-nl="Reserveringen" data-lang-en="Reservations">Reserveringen</div></div>
+                    <div class="kpi"><div class="kpi-n">€12K</div><div class="kpi-l" data-lang-nl="Omzet" data-lang-en="Revenue">Omzet</div></div>
                 </div>
             </div>
         </div>
@@ -1168,55 +957,53 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     SPLIT SECTION B
-═══════════════════════════════════════════════════ -->
-<section class="split-section alt">
-    <div class="split-inner reverse">
-        <div class="split-text reveal delay-1">
-            <div class="section-label" data-lang-nl="Locaties" data-lang-en="Locations">Locaties</div>
+<!-- SPLIT B — Map -->
+<section class="split split-bg">
+    <div class="split-inner rev">
+        <div class="split-text reveal d1">
+            <div class="section-eyebrow" data-lang-nl="Locaties" data-lang-en="Locations">Locaties</div>
             <h2 class="section-title" data-lang-nl="Vind je plek op de kaart" data-lang-en="Find your spot on the map">Vind je plek op de kaart</h2>
-            <p class="section-sub" data-lang-nl="Interactieve kaartweergave toont je alle beschikbare plekken in de buurt — realtime bijgewerkt." data-lang-en="Interactive map view shows all available spots nearby — updated in real time.">Interactieve kaartweergave toont je alle beschikbare plekken in de buurt — realtime bijgewerkt.</p>
-            <ul class="split-checklist">
+            <p class="section-sub" data-lang-nl="Interactieve kaartweergave toont alle beschikbare plekken in de buurt — realtime bijgewerkt." data-lang-en="Interactive map view shows all available spots nearby — updated in real time.">Interactieve kaartweergave toont alle beschikbare plekken in de buurt — realtime bijgewerkt.</p>
+            <ul class="check-list">
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="GPS-gebaseerde locaties in de buurt" data-lang-en="GPS-based nearby locations">GPS-gebaseerde locaties in de buurt</span>
                 </li>
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="Kleurcodering voor beschikbaarheid" data-lang-en="Color-coding for availability">Kleurcodering voor beschikbaarheid</span>
                 </li>
                 <li>
-                    <span class="check-icon"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                    <span class="check-icon"><svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                     <span data-lang-nl="Prijsvergelijking per locatie" data-lang-en="Price comparison per location">Prijsvergelijking per locatie</span>
                 </li>
             </ul>
             @auth
-                <a href="{{ route('user.reserve') }}" class="btn-primary btn-primary-lg" data-lang-nl="Vind een plek →" data-lang-en="Find a spot →">Vind een plek →</a>
+                <a href="{{ route('user.reserve') }}" class="btn-hero-primary" data-lang-nl="Vind een plek →" data-lang-en="Find a spot →">Vind een plek →</a>
             @else
-                <a href="{{ route('register') }}" class="btn-primary btn-primary-lg" data-lang-nl="Probeer gratis →" data-lang-en="Try for free →">Probeer gratis →</a>
+                <a href="{{ route('register') }}" class="btn-hero-primary" data-lang-nl="Probeer gratis →" data-lang-en="Try for free →">Probeer gratis →</a>
             @endauth
         </div>
 
-        <div class="split-img reveal">
+        <div class="split-vis reveal">
             <div class="map-mock">
-                <div class="map-header">
+                <div class="map-head">
                     <div class="map-title" data-lang-nl="📍 Parkeerlocaties — Centrum" data-lang-en="📍 Parking locations — City centre">📍 Parkeerlocaties — Centrum</div>
                     <div class="live-pill"><span class="live-dot"></span>Live</div>
                 </div>
                 <div class="map-body">
-                    <div class="map-grid-lines"></div>
+                    <div class="map-grid"></div>
                     <div class="map-pins">
                         <div class="map-pin">
-                            <div class="pin-circle g">12</div>
+                            <div class="pin-circle pin-g">12</div>
                             <div class="pin-lbl" data-lang-nl="Terrein A" data-lang-en="Lot A">Terrein A</div>
                         </div>
                         <div class="map-pin">
-                            <div class="pin-circle r">0</div>
+                            <div class="pin-circle pin-r">0</div>
                             <div class="pin-lbl" data-lang-nl="Terrein B" data-lang-en="Lot B">Terrein B</div>
                         </div>
                         <div class="map-pin">
-                            <div class="pin-circle y">4</div>
+                            <div class="pin-circle pin-y">4</div>
                             <div class="pin-lbl" data-lang-nl="Terrein C" data-lang-en="Lot C">Terrein C</div>
                         </div>
                     </div>
@@ -1227,117 +1014,101 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     HOW IT WORKS
-═══════════════════════════════════════════════════ -->
-<section class="section" id="how">
-    <div class="section-header reveal">
-        <div class="section-label" data-lang-nl="Proces" data-lang-en="Process">Proces</div>
+<!-- HOW IT WORKS -->
+<section class="section section-surface" id="how">
+    <div class="section-head reveal">
+        <div class="section-eyebrow" data-lang-nl="Proces" data-lang-en="Process">Proces</div>
         <h2 class="section-title" data-lang-nl="Hoe werkt het?" data-lang-en="How does it work?">Hoe werkt het?</h2>
         <p class="section-sub" data-lang-nl="5 simpele stappen naar jouw gereserveerde parkeerplek." data-lang-en="5 simple steps to your reserved parking spot.">5 simpele stappen naar jouw gereserveerde parkeerplek.</p>
     </div>
-
-    <div class="steps-row">
-        <div class="step-card reveal delay-1">
+    <div class="steps">
+        <div class="step reveal d1">
             <div class="step-num">1</div>
-            <h3 class="step-title" data-lang-nl="Account aanmaken" data-lang-en="Create account">Account aanmaken</h3>
-            <p class="step-text" data-lang-nl="Registreer met je e-mailadres en maak een veilig account in 30 seconden." data-lang-en="Register with your email and create a secure account in 30 seconds.">Registreer met je e-mailadres en maak een veilig account in 30 seconden.</p>
+            <h3 class="step-h" data-lang-nl="Account aanmaken" data-lang-en="Create account">Account aanmaken</h3>
+            <p class="step-p" data-lang-nl="Registreer met je e-mail in 30 seconden." data-lang-en="Register with your email in 30 seconds.">Registreer met je e-mail in 30 seconden.</p>
         </div>
-        <div class="step-card reveal delay-2">
+        <div class="step reveal d2">
             <div class="step-num">2</div>
-            <h3 class="step-title" data-lang-nl="Beschikbaarheid zien" data-lang-en="Check availability">Beschikbaarheid zien</h3>
-            <p class="step-text" data-lang-nl="Zie in realtime welke plekken vrij zijn op jouw gewenste locatie." data-lang-en="See in real time which spots are available at your desired location.">Zie in realtime welke plekken vrij zijn op jouw gewenste locatie.</p>
+            <h3 class="step-h" data-lang-nl="Beschikbaarheid zien" data-lang-en="Check availability">Beschikbaarheid zien</h3>
+            <p class="step-p" data-lang-nl="Realtime vrije plekken op jouw locatie." data-lang-en="Real-time free spots at your location.">Realtime vrije plekken op jouw locatie.</p>
         </div>
-        <div class="step-card reveal delay-3">
+        <div class="step reveal d3">
             <div class="step-num">3</div>
-            <h3 class="step-title" data-lang-nl="Plek reserveren" data-lang-en="Reserve spot">Plek reserveren</h3>
-            <p class="step-text" data-lang-nl="Kies je voorkeursplek en bevestig je reservering met één klik." data-lang-en="Choose your preferred spot and confirm your reservation with one click.">Kies je voorkeursplek en bevestig je reservering met één klik.</p>
+            <h3 class="step-h" data-lang-nl="Plek reserveren" data-lang-en="Reserve spot">Plek reserveren</h3>
+            <p class="step-p" data-lang-nl="Bevestig je reservering met één klik." data-lang-en="Confirm your reservation with one click.">Bevestig je reservering met één klik.</p>
         </div>
-        <div class="step-card reveal delay-4">
+        <div class="step reveal d4">
             <div class="step-num">4</div>
-            <h3 class="step-title" data-lang-nl="Veilig betalen" data-lang-en="Pay securely">Veilig betalen</h3>
-            <p class="step-text" data-lang-nl="Betaal veilig via iDEAL, creditcard of andere betaalmethoden." data-lang-en="Pay securely via iDEAL, credit card or other payment methods.">Betaal veilig via iDEAL, creditcard of andere betaalmethoden.</p>
+            <h3 class="step-h" data-lang-nl="Veilig betalen" data-lang-en="Pay securely">Veilig betalen</h3>
+            <p class="step-p" data-lang-nl="iDEAL, creditcard of andere methoden." data-lang-en="iDEAL, credit card or other methods.">iDEAL, creditcard of andere methoden.</p>
         </div>
-        <div class="step-card reveal delay-5">
+        <div class="step reveal d5">
             <div class="step-num">5</div>
-            <h3 class="step-title" data-lang-nl="Klaar & parkeer!" data-lang-en="Done & park!">Klaar & parkeer!</h3>
-            <p class="step-text" data-lang-nl="Ontvang je bevestiging. Rijd naar je plek — die is van jou." data-lang-en="Receive your confirmation. Drive to your spot — it's yours.">Ontvang je bevestiging. Rijd naar je plek — die is van jou.</p>
+            <h3 class="step-h" data-lang-nl="Klaar & parkeer!" data-lang-en="Done & park!">Klaar & parkeer!</h3>
+            <p class="step-p" data-lang-nl="Ontvang bevestiging. De plek is van jou." data-lang-en="Receive confirmation. The spot is yours.">Ontvang bevestiging. De plek is van jou.</p>
         </div>
     </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     STATS BAND
-═══════════════════════════════════════════════════ -->
-<section class="stats-band reveal">
-    <div class="stats-band-grid">
+<!-- STATS BAND -->
+<section class="stats reveal">
+    <div class="stats-grid">
         <div>
-            <div class="sb-num">50K+</div>
-            <div class="sb-label" data-lang-nl="Gebruikers vertrouwen ons" data-lang-en="Users trust us">Gebruikers vertrouwen ons</div>
+            <div class="stat-num">50K+</div>
+            <div class="stat-label" data-lang-nl="Gebruikers vertrouwen ons" data-lang-en="Users trust us">Gebruikers vertrouwen ons</div>
         </div>
         <div>
-            <div class="sb-num">10K+</div>
-            <div class="sb-label" data-lang-nl="Reserveringen per maand" data-lang-en="Reservations per month">Reserveringen per maand</div>
+            <div class="stat-num">10K+</div>
+            <div class="stat-label" data-lang-nl="Reserveringen per maand" data-lang-en="Reservations per month">Reserveringen per maand</div>
         </div>
         <div>
-            <div class="sb-num">99.9%</div>
-            <div class="sb-label" data-lang-nl="Uptime garantie" data-lang-en="Uptime guarantee">Uptime garantie</div>
+            <div class="stat-num">99.9%</div>
+            <div class="stat-label" data-lang-nl="Uptime garantie" data-lang-en="Uptime guarantee">Uptime garantie</div>
         </div>
         <div>
-            <div class="sb-num">24/7</div>
-            <div class="sb-label" data-lang-nl="Support & monitoring" data-lang-en="Support & monitoring">Support & monitoring</div>
+            <div class="stat-num">24/7</div>
+            <div class="stat-label" data-lang-nl="Support & monitoring" data-lang-en="Support & monitoring">Support & monitoring</div>
         </div>
     </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     TESTIMONIALS
-═══════════════════════════════════════════════════ -->
-<section class="section section-alt">
-    <div class="section-header reveal">
-        <div class="section-label" data-lang-nl="Klanten" data-lang-en="Customers">Klanten</div>
+<!-- TESTIMONIALS -->
+<section class="section section-white">
+    <div class="section-head reveal">
+        <div class="section-eyebrow" data-lang-nl="Klanten" data-lang-en="Customers">Klanten</div>
         <h2 class="section-title" data-lang-nl="Wat gebruikers zeggen" data-lang-en="What users say">Wat gebruikers zeggen</h2>
         <p class="section-sub" data-lang-nl="Duizenden tevreden gebruikers parkeren dagelijks slimmer met SmartParking." data-lang-en="Thousands of satisfied users park smarter every day with SmartParking.">Duizenden tevreden gebruikers parkeren dagelijks slimmer met SmartParking.</p>
     </div>
-
     <div class="testi-grid">
-        <div class="testi-card reveal delay-1">
-            <div class="testi-stars">
-                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            </div>
-            <p class="testi-quote" data-lang-nl='"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"' data-lang-en='"Never driving around looking for a spot again. SmartParking shows me immediately where to go. A real game-changer!"'>"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"</p>
-            <div class="testi-author">
-                <div class="testi-avatar" style="background:linear-gradient(135deg,#2563eb,#3b82f6)">M</div>
+        <div class="testi reveal d1">
+            <div class="stars">★★★★★</div>
+            <p class="testi-q" data-lang-nl='"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"' data-lang-en='"Never driving around looking for a spot again. SmartParking shows me immediately where to go. A real game-changer!"'>"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"</p>
+            <div class="testi-auth">
+                <div class="testi-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">M</div>
                 <div>
                     <div class="testi-name">Mark de Vries</div>
                     <div class="testi-role" data-lang-nl="Dagelijkse forens, Utrecht" data-lang-en="Daily commuter, Utrecht">Dagelijkse forens, Utrecht</div>
                 </div>
             </div>
         </div>
-
-        <div class="testi-card reveal delay-2">
-            <div class="testi-stars">
-                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            </div>
-            <p class="testi-quote" data-lang-nl='"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."' data-lang-en='"As a manager I finally have full insight into occupancy. The analytics are incredibly valuable for our planning."'>"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."</p>
-            <div class="testi-author">
-                <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
+        <div class="testi reveal d2">
+            <div class="stars">★★★★★</div>
+            <p class="testi-q" data-lang-nl='"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."' data-lang-en='"As a manager I finally have full insight into occupancy. The analytics are incredibly valuable for our planning."'>"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."</p>
+            <div class="testi-auth">
+                <div class="testi-av" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
                 <div>
                     <div class="testi-name">Sophie Janssen</div>
                     <div class="testi-role" data-lang-nl="Parkeerbeheeder, Amsterdam" data-lang-en="Parking manager, Amsterdam">Parkeerbeheeder, Amsterdam</div>
                 </div>
             </div>
         </div>
-
-        <div class="testi-card reveal delay-3">
-            <div class="testi-stars">
-                <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
-            </div>
-            <p class="testi-quote" data-lang-nl='"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."' data-lang-en='"The app works perfectly on my phone. Booking is so fast — I use it every day for work."'>"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."</p>
-            <div class="testi-author">
-                <div class="testi-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">R</div>
+        <div class="testi reveal d3">
+            <div class="stars">★★★★★</div>
+            <p class="testi-q" data-lang-nl='"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."' data-lang-en='"The app works perfectly on my phone. Booking is so fast — I use it every day for work."'>"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."</p>
+            <div class="testi-auth">
+                <div class="testi-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">R</div>
                 <div>
                     <div class="testi-name">Riad El Ouali</div>
                     <div class="testi-role" data-lang-nl="Ondernemer, Rotterdam" data-lang-en="Entrepreneur, Rotterdam">Ondernemer, Rotterdam</div>
@@ -1348,9 +1119,7 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     CTA SECTION
-═══════════════════════════════════════════════════ -->
+<!-- CTA -->
 <section class="cta-section">
     <div class="cta-box reveal">
         <h2 class="cta-title" data-lang-nl="Klaar voor slim parkeren?" data-lang-en="Ready for smart parking?">Klaar voor slim parkeren?</h2>
@@ -1369,34 +1138,31 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     TEAM
-═══════════════════════════════════════════════════ -->
+<!-- TEAM -->
 <section class="section section-surface" id="team">
-    <div class="section-header reveal">
-        <div class="section-label" data-lang-nl="Team" data-lang-en="Team">Team</div>
+    <div class="section-head reveal">
+        <div class="section-eyebrow" data-lang-nl="Team" data-lang-en="Team">Team</div>
         <h2 class="section-title" data-lang-nl="Bouwers van SmartParking" data-lang-en="Builders of SmartParking">Bouwers van SmartParking</h2>
         <p class="section-sub" data-lang-nl="Een getalenteerd team dat samen iets speciaals heeft gecreëerd." data-lang-en="A talented team that created something special together.">Een getalenteerd team dat samen iets speciaals heeft gecreëerd.</p>
     </div>
-
     <div class="team-grid">
-        <div class="team-card reveal delay-1">
-            <div class="team-avatar av-blue">A</div>
+        <div class="team-card reveal d1">
+            <div class="team-av av-a">A</div>
             <div class="team-name">Adem</div>
             <div class="team-role" data-lang-nl="Backend & Database" data-lang-en="Backend & Database">Backend & Database</div>
         </div>
-        <div class="team-card reveal delay-2">
-            <div class="team-avatar av-green">S</div>
+        <div class="team-card reveal d2">
+            <div class="team-av av-s">S</div>
             <div class="team-name">Salim</div>
             <div class="team-role" data-lang-nl="Frontend & Design" data-lang-en="Frontend & Design">Frontend & Design</div>
         </div>
-        <div class="team-card reveal delay-3">
-            <div class="team-avatar av-purple">S</div>
+        <div class="team-card reveal d3">
+            <div class="team-av av-s2">S</div>
             <div class="team-name">Sjoerd</div>
             <div class="team-role" data-lang-nl="Frontend & Backend" data-lang-en="Frontend & Backend">Frontend & Backend</div>
         </div>
-        <div class="team-card reveal delay-4">
-            <div class="team-avatar av-orange">M</div>
+        <div class="team-card reveal d4">
+            <div class="team-av av-m">M</div>
             <div class="team-name">Mokhless</div>
             <div class="team-role" data-lang-nl="Frontend & Backend" data-lang-en="Frontend & Backend">Frontend & Backend</div>
         </div>
@@ -1404,170 +1170,128 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     ALL FEATURES BADGES
-═══════════════════════════════════════════════════ -->
-<section class="section">
-    <div class="section-header reveal">
-        <div class="section-label" data-lang-nl="Mogelijkheden" data-lang-en="Capabilities">Mogelijkheden</div>
+<!-- ALL FEATURES -->
+<section class="section section-white">
+    <div class="section-head reveal">
+        <div class="section-eyebrow" data-lang-nl="Mogelijkheden" data-lang-en="Capabilities">Mogelijkheden</div>
         <h2 class="section-title" data-lang-nl="Alles inbegrepen" data-lang-en="Everything included">Alles inbegrepen</h2>
         <p class="section-sub" data-lang-nl="Volledig uitgerust met alles wat je nodig hebt voor slimmer parkeren." data-lang-en="Fully equipped with everything you need for smarter parking.">Volledig uitgerust met alles wat je nodig hebt voor slimmer parkeren.</p>
     </div>
-
-    <div class="badges-wrap reveal delay-1">
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Realtime beschikbaarheid" data-lang-en="Real-time availability">Realtime beschikbaarheid</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Veilige authenticatie" data-lang-en="Secure authentication">Veilige authenticatie</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Admin dashboard" data-lang-en="Admin dashboard">Admin dashboard</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Reserveringssysteem" data-lang-en="Reservation system">Reserveringssysteem</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Responsief design" data-lang-en="Responsive design">Responsief design</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Veilig betaalsysteem" data-lang-en="Secure payment">Veilig betaalsysteem</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Reserveringsbeheer" data-lang-en="Booking management">Reserveringsbeheer</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Rol-gebaseerde toegang" data-lang-en="Role-based access">Rol-gebaseerde toegang</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Gebruikersbeheer" data-lang-en="User management">Gebruikersbeheer</span></span>
-        <span class="feat-badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Multi-locatie beheer" data-lang-en="Multi-location management">Multi-locatie beheer</span></span>
+    <div class="badges reveal d1">
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Realtime beschikbaarheid" data-lang-en="Real-time availability">Realtime beschikbaarheid</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Veilige authenticatie" data-lang-en="Secure authentication">Veilige authenticatie</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Admin dashboard" data-lang-en="Admin dashboard">Admin dashboard</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Reserveringssysteem" data-lang-en="Reservation system">Reserveringssysteem</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Responsief design" data-lang-en="Responsive design">Responsief design</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Veilig betaalsysteem" data-lang-en="Secure payment">Veilig betaalsysteem</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Reserveringsbeheer" data-lang-en="Booking management">Reserveringsbeheer</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Rol-gebaseerde toegang" data-lang-en="Role-based access">Rol-gebaseerde toegang</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Gebruikersbeheer" data-lang-en="User management">Gebruikersbeheer</span></span>
+        <span class="badge"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-lang-nl="Multi-locatie beheer" data-lang-en="Multi-location management">Multi-locatie beheer</span></span>
     </div>
 </section>
 
 
-<!-- ═══════════════════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer class="footer">
-    <div class="footer-inner">
-        <div class="footer-top">
-            <div class="footer-brand-col footer-col">
-                <div class="footer-logo">
-                    <div class="footer-logo-icon">
-                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    </div>
-                    Smart<span>Parking</span>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <div class="footer-logo-wrap">
+                <div class="footer-logo-mark">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
                 </div>
-                <p class="footer-desc" data-lang-nl="De slimste manier om te parkeren. Realtime beschikbaarheid, instant reserveren, totale controle." data-lang-en="The smartest way to park. Real-time availability, instant booking, total control.">De slimste manier om te parkeren. Realtime beschikbaarheid, instant reserveren, totale controle.</p>
+                Smart<span class="accent">Parking</span>
             </div>
-
-            <div class="footer-col">
-                <h4 data-lang-nl="Product" data-lang-en="Product">Product</h4>
-                <ul>
-                    <li><a href="#features" data-lang-nl="Functies" data-lang-en="Features">Functies</a></li>
-                    <li><a href="#how" data-lang-nl="Hoe het werkt" data-lang-en="How it works">Hoe het werkt</a></li>
-                    <li><a href="#team" data-lang-nl="Team" data-lang-en="Team">Team</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4 data-lang-nl="Account" data-lang-en="Account">Account</h4>
-                <ul>
-                    <li><a href="{{ route('login') }}" data-lang-nl="Inloggen" data-lang-en="Log in">Inloggen</a></li>
-                    <li><a href="{{ route('register') }}" data-lang-nl="Registreren" data-lang-en="Register">Registreren</a></li>
-                    <li><a href="#" data-lang-nl="Contacteer ons" data-lang-en="Contact us">Contacteer ons</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-col">
-                <h4 data-lang-nl="Over" data-lang-en="About">Over</h4>
-                <ul>
-                    <li><a href="#" data-lang-nl="Over SmartParking" data-lang-en="About SmartParking">Over SmartParking</a></li>
-                    <li><a href="#" data-lang-nl="Privacy Policy" data-lang-en="Privacy Policy">Privacy Policy</a></li>
-                    <li><a href="#" data-lang-nl="Gebruiksvoorwaarden" data-lang-en="Terms of Service">Gebruiksvoorwaarden</a></li>
-                    <li><a href="#" data-lang-nl="Laravel" data-lang-en="Laravel">Laravel</a></li>
-                </ul>
-            </div>
+            <p class="footer-desc" data-lang-nl="De slimste manier om te parkeren. Realtime beschikbaarheid, instant reserveren, totale controle." data-lang-en="The smartest way to park. Real-time availability, instant booking, total control.">De slimste manier om te parkeren. Realtime beschikbaarheid, instant reserveren, totale controle.</p>
         </div>
-
-        <div class="footer-bottom">
-            <div class="footer-copy">
-                <span data-lang-nl="&copy; {{ date('Y') }} SmartParking — Gebouwd door Adem, Salim, Sjoerd &amp; Mokhless. Alle rechten voorbehouden." data-lang-en="&copy; {{ date('Y') }} SmartParking — Built by Adem, Salim, Sjoerd &amp; Mokhless. All rights reserved.">&copy; {{ date('Y') }} SmartParking — Gebouwd door Adem, Salim, Sjoerd &amp; Mokhless. Alle rechten voorbehouden.</span>
-            </div>
-            <div class="footer-socials">
-                <a href="#" class="social-btn" aria-label="GitHub">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="Lightning">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </a>
-                <a href="#" class="social-btn" aria-label="Email">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </a>
-            </div>
+        <div class="footer-col">
+            <h4 data-lang-nl="Product" data-lang-en="Product">Product</h4>
+            <ul>
+                <li><a href="#features" data-lang-nl="Functies" data-lang-en="Features">Functies</a></li>
+                <li><a href="#how" data-lang-nl="Hoe het werkt" data-lang-en="How it works">Hoe het werkt</a></li>
+                <li><a href="#team" data-lang-nl="Team" data-lang-en="Team">Team</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-lang-nl="Account" data-lang-en="Account">Account</h4>
+            <ul>
+                <li><a href="{{ route('login') }}" data-lang-nl="Inloggen" data-lang-en="Log in">Inloggen</a></li>
+                <li><a href="{{ route('register') }}" data-lang-nl="Registreren" data-lang-en="Register">Registreren</a></li>
+                <li><a href="#" data-lang-nl="Contacteer ons" data-lang-en="Contact us">Contacteer ons</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-lang-nl="Over" data-lang-en="About">Over</h4>
+            <ul>
+                <li><a href="#" data-lang-nl="Over SmartParking" data-lang-en="About SmartParking">Over SmartParking</a></li>
+                <li><a href="#" data-lang-nl="Privacy Policy" data-lang-en="Privacy Policy">Privacy Policy</a></li>
+                <li><a href="#" data-lang-nl="Gebruiksvoorwaarden" data-lang-en="Terms of Service">Gebruiksvoorwaarden</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-copy">
+            <span data-lang-nl="&copy; {{ date('Y') }} SmartParking — Gebouwd door Adem, Salim, Sjoerd &amp; Mokhless." data-lang-en="&copy; {{ date('Y') }} SmartParking — Built by Adem, Salim, Sjoerd &amp; Mokhless.">&copy; {{ date('Y') }} SmartParking — Gebouwd door Adem, Salim, Sjoerd &amp; Mokhless.</span>
+        </div>
+        <div class="footer-socials">
+            <a href="#" class="social-btn" aria-label="GitHub">
+                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Speed">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Email">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </a>
         </div>
     </div>
 </footer>
 
 
-<!-- ═══════════════════════════════════════════════════
-     SCRIPTS
-═══════════════════════════════════════════════════ -->
 <script>
-    /* ═══════════════════════════════════════════════
-       LANGUAGE SWITCH — Full implementation
-       - Reads/writes localStorage for persistence
-       - Translates all data-lang-nl / data-lang-en attributes
-       - Persists between page reloads and visits
-    ═══════════════════════════════════════════════ */
+    /* ── LANGUAGE ── */
     const LANG_KEY = 'sp_lang';
 
     function applyLang(lang) {
         const isEN = lang === 'en';
-
-        /* Update button label */
         const btn = document.getElementById('langTxt');
         if (btn) btn.textContent = isEN ? '🇬🇧 EN' : '🇳🇱 NL';
-
-        /* Translate every element with data-lang-nl / data-lang-en */
         const attrKey = isEN ? 'data-lang-en' : 'data-lang-nl';
-        document.querySelectorAll('[data-lang-nl], [data-lang-en]').forEach(el => {
+        document.querySelectorAll('[data-lang-nl],[data-lang-en]').forEach(el => {
             const val = el.getAttribute(attrKey);
             if (val === null) return;
-
-            /* For elements that only contain text (no children other than text nodes) */
-            if (el.children.length === 0) {
-                /* Use innerHTML so HTML entities like &rarr; and <strong> render */
-                el.innerHTML = val;
-            } else {
-                /* Element has child elements — only swap if it also carries own text */
-                /* Skip composite elements to avoid breaking icons/SVGs */
-            }
+            if (el.children.length === 0) el.innerHTML = val;
         });
-
-        /* Update <html lang=""> */
         document.documentElement.lang = isEN ? 'en' : 'nl';
-
-        /* Persist */
         try { localStorage.setItem(LANG_KEY, lang); } catch(e) {}
     }
 
     function toggleLang() {
-        const current = (function() {
-            try { return localStorage.getItem(LANG_KEY) || 'nl'; } catch(e) { return 'nl'; }
-        })();
-        applyLang(current === 'nl' ? 'en' : 'nl');
+        let cur = 'nl';
+        try { cur = localStorage.getItem(LANG_KEY) || 'nl'; } catch(e) {}
+        applyLang(cur === 'nl' ? 'en' : 'nl');
     }
 
-    /* Restore saved language on page load */
-    (function init() {
+    (function() {
         let saved = 'nl';
         try { saved = localStorage.getItem(LANG_KEY) || 'nl'; } catch(e) {}
         applyLang(saved);
     })();
 
-    /* ═══════════════════════════════════════════════
-       SCROLL REVEAL
-    ═══════════════════════════════════════════════ */
-    const revealObserver = new IntersectionObserver(entries => {
+    /* ── SCROLL REVEAL ── */
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                revealObserver.unobserve(e.target);
-            }
+            if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
         });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    /* ═══════════════════════════════════════════════
-       SCROLLED NAVBAR
-    ═══════════════════════════════════════════════ */
-    const navbar = document.getElementById('navbar');
-    const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 60);
+    /* ── SCROLLED NAV ── */
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 </script>
