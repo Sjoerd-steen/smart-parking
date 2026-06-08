@@ -1,3 +1,4 @@
+cat > /home/claude/welcome.blade.php << 'ENDOFFILE'
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -200,10 +201,6 @@
             pointer-events: none; z-index: 0;
         }
 
-        /*
-         * hero-inner wraps BOTH the text content AND the background image.
-         * The image sits absolutely behind the text via z-index layering.
-         */
         .hero-inner {
             position: relative;
             z-index: 10;
@@ -215,29 +212,22 @@
 
         @keyframes heroIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
 
-        /* ─── HERO BG IMAGE — lives INSIDE hero-inner, sits behind text ─── */
-.hero-bg-img {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-    transform: translateX(-50%);
-
-    width: 170%; /* speel hiermee */
-    z-index: 0;
-    pointer-events: none;
-    border-radius: var(--r-xl);
-    overflow: hidden;
-}
-        /* Multi-layer overlay: heavy at top (covers text area), fades to transparent at bottom so image shows through below buttons */
+        .hero-bg-img {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 170%;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: var(--r-xl);
+            overflow: hidden;
+        }
         .hero-bg-img::after {
             content: '';
             position: absolute;
             inset: 0;
-            /* Strong fade from the page bg colour → semi-transparent → clear.
-               Top ~55% (badge + h1 + sub + buttons) stays very readable.
-               Bottom ~45% the image comes through naturally. */
             background:
                 linear-gradient(
                     to bottom,
@@ -250,13 +240,11 @@
                 );
         }
 
-        /* All direct text/button children sit on top of the bg image */
         .hero-inner > *:not(.hero-bg-img) {
             position: relative;
             z-index: 1;
         }
 
-        /* Padding so the content has room above/below and the image has height */
         .hero-content-wrap {
             position: relative;
             z-index: 1;
@@ -325,7 +313,12 @@
         }
         .btn-hero-secondary:hover {
             border-color: var(--blue); color: var(--blue);
-            background: rgba(26,86,219,.04); transform: translateY(-3px);
+             transform: translateY(-3px);
+              box-shadow: 0 18px 52px rgba(114, 145, 212, 0.4); 
+            background : rgba(103, 139, 218, 0.61);
+     
+          
+          
         }
 
         .hero-proof {
@@ -345,7 +338,6 @@
         .proof-text { font-size: .85rem; color: var(--ink-3); }
         .proof-text strong { color: var(--ink); font-weight: 700; }
 
-        /* ─── HERO SCREENSHOT — visible BELOW the text, below hero-inner ─── */
         .hero-img-wrap {
             position: relative;
             z-index: 1;
@@ -356,7 +348,6 @@
             animation: heroIn 1s var(--ease-spring) .46s both;
         }
 
-        /* Fade the top of the exposed screenshot so it blends with the content above */
         .hero-img-wrap::before {
             content: '';
             position: absolute;
@@ -465,8 +456,13 @@
             width: 52px; height: 52px; border-radius: var(--r-sm);
             background: var(--grad-soft); border: 1px solid rgba(26,86,219,.12);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 1.3rem;
+            margin-bottom: 1.3rem;
             transition: transform .3s var(--ease-spring);
+        }
+        .feat-icon svg {
+            width: 24px; height: 24px;
+            color: var(--blue);
+            flex-shrink: 0;
         }
         .feat-card:hover .feat-icon { transform: scale(1.08) rotate(-4deg); }
         .feat-h { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .55rem; letter-spacing: -.01em; }
@@ -610,7 +606,8 @@
             border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--sh-lg);
         }
         .map-head { padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .map-title { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--ink); }
+        .map-title { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--ink); display: flex; align-items: center; gap: .5rem; }
+        .map-title svg { width: 16px; height: 16px; color: var(--blue); flex-shrink: 0; }
         .map-body { height: 240px; background: linear-gradient(135deg, #eef4ff 0%, #e9f9ff 100%); position: relative; display: flex; align-items: center; justify-content: center; }
         .map-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,219,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,219,.06) 1px, transparent 1px); background-size: 28px 28px; }
         .map-pins { position: relative; z-index: 1; display: flex; gap: 2.5rem; }
@@ -636,7 +633,8 @@
             transition: transform .3s var(--ease-spring), box-shadow .3s;
         }
         .testi:hover { transform: translateY(-6px); box-shadow: var(--sh-md); }
-        .stars { display: flex; gap: .15rem; margin-bottom: .9rem; color: #f59e0b; font-size: .95rem; }
+        .stars { display: flex; gap: .2rem; margin-bottom: .9rem; }
+        .stars svg { width: 15px; height: 15px; color: #f59e0b; fill: #f59e0b; }
         .testi-q { font-size: .92rem; color: var(--ink-2); line-height: 1.72; margin-bottom: 1.4rem; font-style: italic; }
         .testi-auth { display: flex; align-items: center; gap: .8rem; }
         .testi-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: .85rem; font-weight: 800; color: #fff; flex-shrink: 0; }
@@ -821,23 +819,14 @@
 </nav>
 
 
-<!-- ═══════════════════════════════════════════════════════════
-     HERO
-     The hero-inner now contains:
-       1. hero-bg-img  — the photo, absolutely positioned BEHIND text (z:0)
-       2. hero-content-wrap — badge + h1 + sub + buttons + proof (z:1)
-     Below hero-inner, hero-img-wrap shows the same image fully exposed.
-     ═══════════════════════════════════════════════════════════ -->
+<!-- HERO -->
 <section class="hero">
-    <!-- Copy block + background image layered inside -->
     <div class="hero-inner">
 
-        <!-- ① Background image — sits BEHIND all text children -->
         <div class="hero-bg-img" aria-hidden="true">
             <img src="{{ asset('images/hero.jpg') }}" alt="" loading="eager">
         </div>
 
-        <!-- ② Text content — sits ON TOP of the bg image -->
         <div class="hero-content-wrap">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
@@ -882,17 +871,14 @@
                     <span data-lang-nl="Al <strong>50.000+</strong> gebruikers parkeren slimmer" data-lang-en="Already <strong>50,000+</strong> users park smarter">Al <strong>50.000+</strong> gebruikers parkeren slimmer</span>
                 </div>
             </div>
-        </div><!-- /hero-content-wrap -->
+        </div>
 
     </div>
     
     <br>
-    <br><!-- /hero-inner -->
+    <br>
 
-    <!-- ▼ Hero image exposed below the text block ▼ -->
-
-
-</section><!-- /hero -->
+</section>
 
 
 <!-- TRUST BAR -->
@@ -926,33 +912,72 @@
         <p class="section-sub" data-lang-nl="We maken parkeren niet alleen gemakkelijker, maar ook slimmer, sneller en veiliger dan ooit." data-lang-en="We make parking not just easier, but smarter, faster and safer than ever.">We maken parkeren niet alleen gemakkelijker, maar ook slimmer, sneller en veiliger dan ooit.</p>
     </div>
     <div class="cards-3">
+        <!-- Realtime — Lucide: zap -->
         <div class="feat-card reveal d1">
-            <div class="feat-icon">⚡</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="Realtime Beschikbaarheid" data-lang-en="Real-time Availability">Realtime Beschikbaarheid</h3>
             <p class="feat-p" data-lang-nl="Live updates elke seconde. Weet altijd exact hoeveel plekken vrij zijn — geen wachten, geen stress." data-lang-en="Live updates every second. Always know exactly how many spots are free — no waiting, no stress.">Live updates elke seconde. Weet altijd exact hoeveel plekken vrij zijn — geen wachten, geen stress.</p>
         </div>
+        <!-- 1-Click — Lucide: mouse-pointer-click -->
         <div class="feat-card reveal d2">
-            <div class="feat-icon">🎯</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 4.5a.5.5 0 011 0V12h4.5a.5.5 0 010 1H10v4.5a.5.5 0 01-1 0V4.5z"/>
+                    <path d="M14.5 14.5l2.5 5"/>
+                    <path d="M9 12L4 7"/>
+                    <circle cx="9" cy="12" r="7"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="1 Klik Reserveren" data-lang-en="1-Click Booking">1 Klik Reserveren</h3>
             <p class="feat-p" data-lang-nl="Je plek is in seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar." data-lang-en="Your spot reserved in seconds. No hassle, no complicated process — just click and go.">Je plek is in seconden gereserveerd. Geen gedoe, geen omslachtig proces — gewoon klikken en klaar.</p>
         </div>
+        <!-- Security — Lucide: shield-check -->
         <div class="feat-card reveal d3">
-            <div class="feat-icon">🔒</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="Veilig & Secure" data-lang-en="Safe & Secure">Veilig & Secure</h3>
             <p class="feat-p" data-lang-nl="Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens altijd in veilige handen." data-lang-en="Enterprise-grade encryption and multi-factor authentication. Your data always in safe hands.">Enterprise-grade encryptie en multi-factor authenticatie. Je gegevens altijd in veilige handen.</p>
         </div>
+        <!-- Responsive — Lucide: smartphone -->
         <div class="feat-card reveal d1">
-            <div class="feat-icon">📱</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="100% Responsive" data-lang-en="100% Responsive">100% Responsive</h3>
             <p class="feat-p" data-lang-nl="Perfecte ervaring op elk apparaat. Desktop, tablet, telefoon — elke pixel klopt." data-lang-en="Perfect experience on every device. Desktop, tablet, phone — every pixel is right.">Perfecte ervaring op elk apparaat. Desktop, tablet, telefoon — elke pixel klopt.</p>
         </div>
+        <!-- Payment — Lucide: credit-card -->
         <div class="feat-card reveal d2">
-            <div class="feat-icon">💳</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="Veilige Betaling" data-lang-en="Secure Payment">Veilige Betaling</h3>
             <p class="feat-p" data-lang-nl="Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant." data-lang-en="Integration with leading payment systems. Fast, secure and PCI-compliant.">Integratie met toonaangevende betaalsystemen. Snel, veilig en PCI-compliant.</p>
         </div>
+        <!-- Management — Lucide: layout-dashboard -->
         <div class="feat-card reveal d3">
-            <div class="feat-icon">📊</div>
+            <div class="feat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="9"/>
+                    <rect x="14" y="3" width="7" height="5"/>
+                    <rect x="14" y="12" width="7" height="9"/>
+                    <rect x="3" y="16" width="7" height="5"/>
+                </svg>
+            </div>
             <h3 class="feat-h" data-lang-nl="Volledig Beheer" data-lang-en="Full Management">Volledig Beheer</h3>
             <p class="feat-p" data-lang-nl="Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis." data-lang-en="Manage all reservations from one dashboard. Modify, cancel or view your complete history.">Manage al je reserveringen vanuit één dashboard. Wijzig, annuleer of bekijk je volledige geschiedenis.</p>
         </div>
@@ -1045,7 +1070,14 @@
         <div class="split-vis reveal">
             <div class="map-mock">
                 <div class="map-head">
-                    <div class="map-title" data-lang-nl="📍 Parkeerlocaties — Centrum" data-lang-en="📍 Parking locations — City centre">📍 Parkeerlocaties — Centrum</div>
+                    <div class="map-title">
+                        <!-- Lucide: map-pin -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <span data-lang-nl="Parkeerlocaties — Centrum" data-lang-en="Parking locations — City centre">Parkeerlocaties — Centrum</span>
+                    </div>
                     <div class="live-pill"><span class="live-dot"></span>Live</div>
                 </div>
                 <div class="map-body">
@@ -1140,7 +1172,13 @@
     </div>
     <div class="testi-grid">
         <div class="testi reveal d1">
-            <div class="stars">★★★★★</div>
+            <div class="stars">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
             <p class="testi-q" data-lang-nl='"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"' data-lang-en='"Never driving around looking for a spot again. SmartParking shows me immediately where to go. A real game-changer!"'>"Nooit meer rondrijden op zoek naar een plek. SmartParking toont me direct waar ik terecht kan. Een echte game-changer!"</p>
             <div class="testi-auth">
                 <div class="testi-av" style="background:linear-gradient(135deg,#1a56db,#3b82f6)">M</div>
@@ -1151,7 +1189,13 @@
             </div>
         </div>
         <div class="testi reveal d2">
-            <div class="stars">★★★★★</div>
+            <div class="stars">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
             <p class="testi-q" data-lang-nl='"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."' data-lang-en='"As a manager I finally have full insight into occupancy. The analytics are incredibly valuable for our planning."'>"Als beheerder heb ik eindelijk volledig inzicht in de bezetting. De analytics zijn ongelooflijk waardevol voor onze planning."</p>
             <div class="testi-auth">
                 <div class="testi-av" style="background:linear-gradient(135deg,#10b981,#34d399)">S</div>
@@ -1162,7 +1206,13 @@
             </div>
         </div>
         <div class="testi reveal d3">
-            <div class="stars">★★★★★</div>
+            <div class="stars">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
             <p class="testi-q" data-lang-nl='"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."' data-lang-en='"The app works perfectly on my phone. Booking is so fast — I use it every day for work."'>"De app werkt perfect op mijn telefoon. Reserveren gaat zo snel — ik gebruik het elke dag voor het werk."</p>
             <div class="testi-auth">
                 <div class="testi-av" style="background:linear-gradient(135deg,#f97316,#fb923c)">R</div>
@@ -1355,3 +1405,5 @@
 
 </body>
 </html>
+ENDOFFILE
+echo "Done"
