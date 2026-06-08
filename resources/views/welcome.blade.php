@@ -216,24 +216,20 @@
         @keyframes heroIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
 
         /* ─── HERO BG IMAGE — lives INSIDE hero-inner, sits behind text ─── */
-        .hero-bg-img {
-            position: absolute;
-            /* stretch to cover the full hero-inner area */
-            inset: 0;
-            z-index: 0;           /* behind all text children (z-index: 1+) */
-            pointer-events: none;
-            border-radius: var(--r-xl);
-            overflow: hidden;
-        }
+.hero-bg-img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
 
-        .hero-bg-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-            display: block;
-        }
+    left: 50%;
+    transform: translateX(-50%);
 
+    width: 170%; /* speel hiermee */
+    z-index: 0;
+    pointer-events: none;
+    border-radius: var(--r-xl);
+    overflow: hidden;
+}
         /* Multi-layer overlay: heavy at top (covers text area), fades to transparent at bottom so image shows through below buttons */
         .hero-bg-img::after {
             content: '';
