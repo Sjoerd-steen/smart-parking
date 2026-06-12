@@ -38,6 +38,8 @@ Route::middleware(['auth', 'banned'])->prefix('user')->name('user.')->group(func
     Route::post('/reserveren/betaal', [ReservationController::class, 'betaalForm'])->name('betaal');
     Route::post('/reserveren/opslaan', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reserveringen', [ReservationController::class, 'index'])->name('reservations');
+    Route::get('/reserveringen/{reservation}/factuur', [ReservationController::class, 'factuur'])->name('reservations.factuur');
+    Route::get('/reserveringen/{reservation}/factuur/pdf', [ReservationController::class, 'factuurPdf'])->name('reservations.factuur.pdf');
     Route::delete('/reserveringen/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 
     // Voertuigen

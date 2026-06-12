@@ -525,17 +525,26 @@
                             <div class="price-label">Totaal</div>
                             <div class="price-value">€{{ number_format($res->totaal_prijs, 2) }}</div>
                         </div>
+
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            @if($res->betaald)
+                                <a href="{{ route('user.reservations.factuur', $res) }}" class="btn-cancel" style="background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; text-decoration: none;">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    Factuur
+                                </a>
+                            @endif
                         
-                        @if($res->status === 'actief')
-                            <form method="POST" action="{{ route('user.reservations.destroy', $res) }}"
-                                  onsubmit="return confirm('Weet u zeker dat u deze reservering wilt annuleren?')" style="display: contents;">
-                                @csrf @method('DELETE')
-                                <button class="btn-cancel">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    Annuleren
-                                </button>
-                            </form>
-                        @endif
+                            @if($res->status === 'actief')
+                                <form method="POST" action="{{ route('user.reservations.destroy', $res) }}"
+                                      onsubmit="return confirm('Weet u zeker dat u deze reservering wilt annuleren?')" style="display: contents;">
+                                    @csrf @method('DELETE')
+                                    <button class="btn-cancel">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        Annuleren
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach

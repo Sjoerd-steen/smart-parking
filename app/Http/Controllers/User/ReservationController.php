@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Services\ParkingApiService;
+use App\Support\InvoiceHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -88,7 +90,7 @@ class ReservationController extends Controller {
         $uren  = max(1, $start->diffInHours($eind));
         $prijs = $uren * ($spot['price_per_hour'] ?? 2.00);
 
-        Reservation::create([
+        $reservation = Reservation::create([
             'user_id'             => Auth::id(),
             'external_parking_id' => $request->external_parking_id,
             'datum'               => $request->datum,
@@ -102,8 +104,51 @@ class ReservationController extends Controller {
             'status'              => 'actief',
         ]);
 
-        return redirect()->route('user.reservations')
-            ->with('success', "Reservering bevestigd! Parkeerplaats {$spot['name']} gereserveerd voor €{$prijs}.");
+        return redirect()->route('user.reservations.factuur', $reservation)
+            ->with('success', "Betaling geslaagd! Parkeerplaats {$spot['name']} gereserveerd voor €{$prijs}.");
+    }
+
+    public function factuur(Reservation $reservation) {
+        if (!$reservation->betaald) {
+            return redirect()->route('user.reservations')
+                ->with('error', 'Factuur is alleen beschikbaar voor betaalde reserveringen.');
+        }
+
+        return view('user.factuur', $this->invoiceData($reservation));
+    }
+
+    public function factuurPdf(Reservation $reservation) {
+        if (!$reservation->betaald) {
+            return redirect()->route('user.reservations')
+                ->with('error', 'Factuur is alleen beschikbaar voor betaalde reserveringen.');
+        }
+
+        $data = $this->invoiceData($reservation);
+        $filename = 'factuur-' . InvoiceHelper::invoiceNumber($reservation->id) . '.pdf';
+
+        return Pdf::loadView('pdf.factuur', $data)
+            ->setPaper('a4', 'portrait')
+            ->download($filename);
+    }
+
+    private function invoiceData(Reservation $reservation): array {
+        if ($reservation->user_id !== Auth::id()) {
+            abort(403, 'Geen toegang.');
+        }
+
+        $reservation->load('user');
+        $spot = $this->parkingService->getSpotById($reservation->external_parking_id);
+
+        $allReservations = Reservation::where('user_id', Auth::id())
+            ->where('status', 'voltooid')
+            ->latest()
+            ->get()
+            ->map(function ($res) {
+                $res->spot_details = $this->parkingService->getSpotById($res->external_parking_id);
+                return $res;
+            });
+
+        return compact('reservation', 'spot', 'allReservations');
     }
 
     public function index() {
