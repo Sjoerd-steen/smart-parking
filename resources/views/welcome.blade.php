@@ -1,4 +1,4 @@
-cat > /home/claude/welcome.blade.php << 'ENDOFFILE'
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -1405,5 +1405,3 @@ cat > /home/claude/welcome.blade.php << 'ENDOFFILE'
 
 </body>
 </html>
-ENDOFFILE
-echo "Done"
