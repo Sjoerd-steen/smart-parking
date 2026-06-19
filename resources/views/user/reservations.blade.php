@@ -443,7 +443,7 @@
 
     @if($reservations->isEmpty())
         <div class="empty-state">
-            <div class="empty-icon">🅿️</div>
+            <div class="empty-icon">🅿</div>
             <div class="empty-title">Nog geen reserveringen</div>
             <p class="empty-text">U hebt nog geen parkeerplaatsen gereserveerd. Begin nu met uw eerste reservering!</p>
             <a href="{{ route('user.reserve') }}" class="btn-reserve">
