@@ -20,10 +20,10 @@
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --bg-primary: #1e293b;
-            --bg-secondary: #0f172a;
+            --bg-primary: #ffffff;
+            --bg-secondary: #e3e3e3;
             --bg-tertiary: #1e3a8a;
-            --text-primary: #f1f5f9;
+            --text-primary: #000000;
             --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
             --border-light: #334155;
@@ -31,7 +31,6 @@
             --accent-blue: #3b82f6;
             --accent-blue-dark: #2563eb;
         }
-    }
 
     .dash {
         font-family: 'DM Sans', sans-serif;
@@ -533,7 +532,7 @@
                                     Factuur
                                 </a>
                             @endif
-                        
+
                             @if($res->status === 'actief')
                                 <form method="POST" action="{{ route('user.reservations.destroy', $res) }}"
                                       onsubmit="return confirm('Weet u zeker dat u deze reservering wilt annuleren?')" style="display: contents;">
