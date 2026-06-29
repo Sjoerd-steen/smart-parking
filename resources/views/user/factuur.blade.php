@@ -243,6 +243,19 @@
         margin-top: 0.5rem;
     }
 
+    html.dark .invoice-paper { background: var(--card-bg); color: var(--text-main); border-color: var(--card-border); }
+    html.dark .invoice-box { background: var(--surface); border-color: var(--border); }
+    html.dark .invoice-box p { color: var(--text-main); }
+    html.dark .invoice-table { background: var(--card-bg); }
+    html.dark .invoice-table th { background: var(--surface-2); color: var(--text-muted); border-bottom-color: var(--border); }
+    html.dark .invoice-table td { color: var(--text-main); border-bottom-color: var(--border-2); }
+    html.dark .invoice-table tr.highlight td { background: rgba(26,86,219,.08); }
+    html.dark .invoice-table .sub { color: var(--text-muted); }
+    html.dark .invoice-total-box { background: rgba(16,185,129,.08); border-color: rgba(16,185,129,.2); }
+    html.dark .invoice-total-box .amount { color: #6ee7b7; }
+    html.dark .invoice-footer { background: var(--card-bg); color: var(--text-muted); border-top-color: var(--border); }
+    html.dark .paid-badge { background: rgba(16,185,129,.15); color: #6ee7b7; }
+
     @media (max-width: 768px) {
         .invoice-header {
             flex-direction: column;
@@ -277,6 +290,8 @@
             background: #fff;
         }
 
+        html.dark .invoice-table tbody tr { background: var(--card-bg); border-color: var(--card-border); }
+
         .invoice-table tbody tr.highlight {
             border-color: #93c5fd;
             box-shadow: 0 0 0 1px #bfdbfe;
@@ -292,6 +307,8 @@
             text-align: right;
         }
 
+        html.dark .invoice-table tbody td { border-bottom-color: var(--border-2); }
+
         .invoice-table tbody td:last-child { border-bottom: none; }
 
         .invoice-table tbody td::before {
@@ -304,6 +321,8 @@
             text-align: left;
             flex-shrink: 0;
         }
+
+        html.dark .invoice-table tbody td::before { color: var(--text-muted); }
 
         .invoice-table tbody td.text-right {
             justify-content: space-between;

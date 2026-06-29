@@ -467,6 +467,33 @@
     .badge-geannuleerd { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
     .badge-afgelopen  { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
     .badge-default    { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+    html.dark .dash { color: var(--text-main); }
+    html.dark .dash-title { color: var(--text-main); }
+    html.dark .dash-sub { color: var(--text-muted); }
+    html.dark .stat-card { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .stat-value { color: var(--text-main); }
+    html.dark .panel { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .panel-title { color: var(--text-main); border-bottom-color: var(--border); }
+    html.dark .quick-link { background: var(--surface); border-color: var(--border); color: var(--ink-3); }
+    html.dark .occ-bar-track { background: var(--surface-2); }
+    html.dark .occ-label { color: var(--text-muted); }
+    html.dark .occ-meta { color: var(--text-muted); }
+    html.dark .live-row.green { background: rgba(16,185,129,.08); border-color: rgba(16,185,129,.2); }
+    html.dark .live-row.blue { background: rgba(26,86,219,.08); border-color: rgba(26,86,219,.2); }
+    html.dark .live-row.green .live-row-label { color: #6ee7b7; }
+    html.dark .live-row.blue .live-row-label { color: #93c5fd; }
+    html.dark .live-row.green .live-row-value { color: #6ee7b7; }
+    html.dark .live-row.blue .live-row-value { color: #93c5fd; }
+    html.dark .table-panel { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .table-title { color: var(--text-main); }
+    html.dark .table-header { border-bottom-color: var(--border); }
+    html.dark .data-table td { color: var(--ink-3); }
+    html.dark .data-table td:first-child { color: var(--text-main); }
+    html.dark .data-table th { color: var(--text-muted); }
+    html.dark .data-table thead tr { border-bottom-color: var(--border); }
+    html.dark .data-table tbody tr { border-bottom-color: var(--border-2); }
+    html.dark .data-table tbody tr:hover { background: var(--surface-2); }
 </style>
 
 <div class="dash">

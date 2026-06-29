@@ -18,19 +18,18 @@
         --accent-blue-dark: #1d4ed8;
     }
 
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #e3e3e3;
-            --bg-tertiary: #1e3a8a;
-            --text-primary: #000000;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border-light: #334155;
-            --border-lighter: #475569;
-            --accent-blue: #3b82f6;
-            --accent-blue-dark: #2563eb;
-        }
+    html.dark {
+        --bg-primary: #1a2338;
+        --bg-secondary: #141a2e;
+        --bg-tertiary: #1e3a8a;
+        --text-primary: #e8edf5;
+        --text-secondary: #8fa3c8;
+        --text-muted: #5a7299;
+        --border-light: #243050;
+        --border-lighter: #2d3f60;
+        --accent-blue: #4d8ef0;
+        --accent-blue-dark: #6ba3f5;
+    }
 
     .dash {
         font-family: 'DM Sans', sans-serif;
@@ -256,11 +255,9 @@
     .status-geannuleerd { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
     .status-voltooid { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
 
-    @media (prefers-color-scheme: dark) {
-        .status-actief { background: #1e3a8a; color: #60a5fa; border-color: #3b82f6; }
-        .status-geannuleerd { background: #7f1d1d; color: #fca5a5; border-color: #dc2626; }
-        .status-voltooid { background: #1b4332; color: #6ee7b7; border-color: #10b981; }
-    }
+    html.dark .status-actief { background: #1e3a8a; color: #60a5fa; border-color: #3b82f6; }
+    html.dark .status-geannuleerd { background: #7f1d1d; color: #fca5a5; border-color: #dc2626; }
+    html.dark .status-voltooid { background: #1b4332; color: #6ee7b7; border-color: #10b981; }
 
     .reservation-details {
         display: grid;

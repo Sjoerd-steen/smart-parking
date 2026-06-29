@@ -230,6 +230,12 @@
 
         .btn-theme svg { width: 16px; height: 16px; }
 
+        /* Theme icons: show correct one based on class — no JS flash */
+        #icon-light { display: block; }
+        html.dark #icon-light { display: none; }
+        #icon-dark { display: none; }
+        html.dark #icon-dark { display: block; }
+
         .nav-divider {
             width: 1px;
             height: 20px;
@@ -364,17 +370,17 @@
 
         /* ─── MOBILE DRAWER ─── */
         .mobile-overlay {
-            display: none;
             position: fixed;
             inset: 0;
             background: rgba(10,15,30,.5);
             backdrop-filter: blur(4px);
             z-index: 150;
             opacity: 0;
+            pointer-events: none;
             transition: opacity .3s;
         }
 
-        .mobile-overlay.visible { opacity: 1; }
+        .mobile-overlay.visible { opacity: 1; pointer-events: auto; }
 
         .mobile-drawer {
             position: fixed;
@@ -443,6 +449,8 @@
             min-height: calc(100vh - 65px);
             padding: 2rem 1.75rem;
         }
+
+        @media (max-width: 640px) { .main-content { padding: 1rem; } }
 
         .main-inner {
             max-width: 1200px;
@@ -580,6 +588,25 @@
             border: 1px solid var(--card-border);
         }
         .leaflet-popup-tip { background: var(--card-bg) !important; }
+
+        /* Responsive table helper */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Ensure all content respects viewport width */
+        img, video, canvas, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Safe area padding for very small screens */
+        @media (max-width: 480px) {
+            .site-nav { padding: .875rem .75rem; }
+            .nav-actions { gap: .35rem; }
+        }
     </style>
 
     <script type="module">import hotwireTurbo from "https://cdn.skypack.dev/@hotwired/turbo";</script>
@@ -629,8 +656,8 @@
     <div class="nav-actions">
 
         <button class="btn-theme" id="theme-toggle" aria-label="Thema wisselen">
-            <svg id="icon-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
-            <svg id="icon-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <svg id="icon-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+            <svg id="icon-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         </button>
 
         @auth
@@ -740,52 +767,36 @@
 </main>
 
 <script>
-    function initApp() {
-        if (document.body.dataset.init === 'true') return;
-        document.body.dataset.init = 'true';
+    let drawerOpen = false;
 
-        const iconLight = document.getElementById('icon-light');
-        const iconDark  = document.getElementById('icon-dark');
-
-        function applyThemeIcons() {
-            const isDark = document.documentElement.classList.contains('dark');
-            if (iconLight) iconLight.classList.toggle('hidden', !isDark);
-            if (iconDark)  iconDark.classList.toggle('hidden', isDark);
-        }
-
-        applyThemeIcons();
-
-        document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    document.addEventListener('click', function(e) {
+        const toggle = e.target.closest('#theme-toggle');
+        if (toggle) {
             const isDark = document.documentElement.classList.contains('dark');
             document.documentElement.classList.toggle('dark', !isDark);
             localStorage.setItem('color-theme', isDark ? 'light' : 'dark');
-            applyThemeIcons();
-        });
-
-        const hamburger = document.getElementById('hamburger');
-        const drawer    = document.getElementById('mobile-drawer');
-        const overlay   = document.getElementById('mobile-overlay');
-        let open = false;
-
-        function toggleDrawer() {
-            open = !open;
-            hamburger?.classList.toggle('open', open);
-            drawer?.classList.toggle('open', open);
-            if (overlay) {
-                overlay.style.display = open ? 'block' : 'none';
-                requestAnimationFrame(() => overlay.classList.toggle('visible', open));
-            }
-            document.body.style.overflow = open ? 'hidden' : '';
         }
 
-        hamburger?.addEventListener('click', toggleDrawer);
-        overlay?.addEventListener('click', toggleDrawer);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape' && open) toggleDrawer(); });
-    }
+        const hamburger = e.target.closest('#hamburger');
+        const overlay   = e.target.closest('#mobile-overlay');
+        if (hamburger || overlay) {
+            drawerOpen = !drawerOpen;
+            document.getElementById('hamburger')?.classList.toggle('open', drawerOpen);
+            document.getElementById('mobile-drawer')?.classList.toggle('open', drawerOpen);
+            document.getElementById('mobile-overlay')?.classList.toggle('visible', drawerOpen);
+            document.body.style.overflow = drawerOpen ? 'hidden' : '';
+        }
+    });
 
-    document.addEventListener('DOMContentLoaded', initApp);
-    document.addEventListener('turbo:load', initApp);
-    if (document.readyState !== 'loading') initApp();
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && drawerOpen) {
+            drawerOpen = false;
+            document.getElementById('hamburger')?.classList.remove('open');
+            document.getElementById('mobile-drawer')?.classList.remove('open');
+            document.getElementById('mobile-overlay')?.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+    });
 </script>
 
 <script src="https://instant.page/5.2.0" type="module" integrity="sha384-jnZcgoEq3ZZ1hzLUAWx08GZ068ngG/ZTu8q+851n02//BdjRkIXXF9WfE2OaLq0" defer></script>

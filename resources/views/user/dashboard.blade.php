@@ -93,6 +93,23 @@
     .map-footer { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1rem; font-size: 0.72rem; color: #94a3b8; }
     .map-refresh { color: #2563eb; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
     .map-refresh:hover { text-decoration: underline; }
+
+    html.dark .dash { color: var(--text-main); }
+    html.dark .dash-title { color: var(--text-main); }
+    html.dark .stat-card { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .stat-value { color: var(--text-main); }
+    html.dark .stat-label { color: var(--text-muted); }
+    html.dark .panel { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .panel-title { color: var(--text-main); border-bottom-color: var(--border); }
+    html.dark .occ-bar-track { background: var(--surface-2); }
+    html.dark .map-legend { background: var(--surface); border-color: var(--border); color: var(--text-muted); }
+    html.dark .quick-link { background: var(--surface); border-color: var(--border); color: var(--ink-3); }
+    html.dark .res-card { background: var(--surface); border-color: var(--border); }
+    html.dark .res-title { color: var(--text-main); }
+    html.dark .res-meta { color: var(--text-muted); }
+    html.dark .res-price { color: #6ee7b7; }
+    html.dark .dash-sub { color: var(--text-muted); }
+    html.dark .res-empty { color: var(--text-muted); }
 </style>
 
 <div class="dash">

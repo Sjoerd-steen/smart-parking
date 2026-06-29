@@ -64,7 +64,7 @@
                         'ideal' => ['iDEAL', '🏦', 'Snel en veilig betalen via uw eigen bank.'], 
                         'paypal' => ['PayPal', '💸', 'Afrekenen met uw PayPal saldo of gekoppelde kaart.'], 
                         'tikkie' => ['Tikkie', '📱', 'Betaalverzoek via uw mobiele telefoon.'], 
-                        'maestro' => ['Maestro / Creditcard', '��', 'Betalen via pinpas of creditcard.']
+                        'maestro' => ['Maestro / Creditcard', '💳', 'Betalen via pinpas of creditcard.']
                     ] as $val => [$label, $icon, $desc])
                         <label class="flex items-start gap-4 p-4 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-600 transition-all
           {{ old('betaal_methode') === $val ? 'ring-2 ring-blue-500 bg-blue-900/30' : '' }}" onclick="document.querySelectorAll('input[name=betaal_methode]').forEach(el => el.parentElement.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-900/30')); this.classList.add('ring-2', 'ring-blue-500', 'bg-blue-900/30');">

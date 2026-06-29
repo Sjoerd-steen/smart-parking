@@ -320,6 +320,25 @@
             font-size: 0.75rem;
         }
     }
+
+    html.dark .dash { color: var(--text-main); }
+    html.dark .dash-title { color: var(--text-main); }
+    html.dark .dash-sub { color: var(--text-muted); }
+    html.dark .search-section { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .search-title { color: var(--text-main); border-bottom-color: var(--border); }
+    html.dark .search-input,
+    html.dark .search-select { background: var(--form-bg); color: var(--form-text); border-color: var(--form-border); }
+    html.dark .clear-button { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+    html.dark .clear-button:hover { background: var(--surface-2); }
+    html.dark .table-panel { background: var(--card-bg); border-color: var(--card-border); }
+    html.dark .table-title { color: var(--text-main); }
+    html.dark .table-header { border-bottom-color: var(--border); }
+    html.dark .data-table td { color: var(--ink-3); }
+    html.dark .data-table td:first-child,
+    html.dark .td-bold { color: var(--text-main); }
+    html.dark .data-table th { color: var(--text-muted); border-bottom-color: var(--border-2); }
+    html.dark .data-table tbody tr { border-bottom-color: var(--border-2); }
+    html.dark .data-table tbody tr:hover { background: var(--surface-2); }
 </style>
 
 <div class="dash">
